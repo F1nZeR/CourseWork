@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="CourseWork.Templates.DrawControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:Templates="clr-namespace:CourseWork.Templates" mc:Ignorable="d" 
+             xmlns:Properties="clr-namespace:CourseWork.Properties"
+             d:DesignHeight="362" d:DesignWidth="457">
+    <UserControl.Resources>
+        <ObjectDataProvider x:Key="odpSettings" ObjectType="{x:Type Properties:Settings}" />
+    </UserControl.Resources>
+    
+    <Grid>
+        <Templates:DrawCanvas x:Name="drawCanvas" Background="Transparent"/>
+        
+        <WrapPanel>
+            <Expander Header="Добавить элемент" Width="128">
+                <StackPanel>
+                    <Button Content="Device" Margin="2" Click="ButtonClickAddDevice" />
+                    <Button Content="Link" Margin="2" Click="ButtonClickAddLink"/>
+                </StackPanel>
+            </Expander>
+
+            <Expander Header="Отображение">
+                <StackPanel>
+                    <CheckBox Name="cbShowInBuffer" IsChecked="True" Content="Вх. поток" Margin="2" 
+                              Click="CheckBoxClickShowInBuffer"/>
+                    <CheckBox Name="cbShowOutBuffer" IsChecked="True" Content="Вых. поток" Margin="2" 
+                              Click="CheckBoxClickShowOutBuffer"/>
+                    <CheckBox Name="cbShowRoute" IsChecked="True" Content="Маршрутизация" Margin="2" 
+                              Click="CheckBoxClickShowRouting"/>
+                    <CheckBox IsChecked="{Binding ElementName=cbShowRoute, Path=IsChecked, Mode=OneWay}" Content="Замыкание" Margin="2" 
+                              Click="CheckBoxClickShowLoopback"/>
+                </StackPanel>
+            </Expander>
+
+            <Expander Header="Вид">
+                <StackPanel>
+                    <Label Content="Замыкание:" />
+                    <ComboBox 
+                        SelectedIndex="{Binding Source={StaticResource odpSettings}, Path=Default.LoopbackType}"
+                        SelectionChanged="ComboBoxLoopbackViewSelectionChanged">
+                        <ComboBoxItem Content="Овал" />
+                        <ComboBoxItem Content="Стрелка" />
+                    </ComboBox>
+                    <Label Content="Link:" />
+                    <ComboBox 
+                        SelectedIndex="{Binding Source={StaticResource odpSettings}, Path=Default.NormalArrowType}"
+                        SelectionChanged="ComboBoxNormalArrowViewSelectionChanged">
+                        <ComboBoxItem Content="Обычная" />
+                        <ComboBoxItem Content="Безье" />
+                    </ComboBox>
+                </StackPanel>
+            </Expander>
+        </WrapPanel>
+    </Grid>
+</UserControl>
