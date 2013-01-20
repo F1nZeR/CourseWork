@@ -38,7 +38,7 @@ namespace CourseWork.Manager
                         ToList();
             }
         }
-
+         
         public List<ConnectionArrow> ConnectionArrows
         {
             get { return _canvas.Children.OfType<ConnectionArrow>().ToList(); }

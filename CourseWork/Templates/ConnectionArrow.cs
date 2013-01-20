@@ -12,7 +12,8 @@ namespace CourseWork.Templates
     public enum ConnectionArrowType
     {
         Normal,
-        Loopback
+        Loopback,
+        OutArrowType
     }
 
     public class ConnectionArrow : Shape
@@ -28,6 +29,19 @@ namespace CourseWork.Templates
         public static readonly DependencyProperty ViewTypeProperty = DependencyProperty.Register(
             "ViewType", typeof(int), typeof(ConnectionArrow), new FrameworkPropertyMetadata(
                 0, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
+
+        public static readonly DependencyProperty ConnectionArrowTypeProperty =
+            DependencyProperty.Register("ArrowType", typeof (ConnectionArrowType), typeof (ConnectionArrow),
+                                        new FrameworkPropertyMetadata(
+                                            default(ConnectionArrowType),
+                                            FrameworkPropertyMetadataOptions.AffectsRender |
+                                            FrameworkPropertyMetadataOptions.AffectsMeasure));
+
+        public ConnectionArrowType ConnectionArrowType
+        {
+            get { return (ConnectionArrowType)GetValue(ConnectionArrowTypeProperty); }
+            set { SetValue(ConnectionArrowTypeProperty, value); }
+        }
 
         [TypeConverter(typeof(LengthConverter))]
         public double X1
@@ -112,7 +126,14 @@ namespace CourseWork.Templates
 
             ViewType = ConnectionArrowType == ConnectionArrowType.Normal
                            ? Properties.Settings.Default.NormalArrowType
-                           : Properties.Settings.Default.LoopbackType;
+                           : Properties.Settings.Default.OutArrowType;
+
+            if (toItem.DiagramItemType == DiagramItemType.BufferOut)
+            {
+                ConnectionArrowType = Properties.Settings.Default.OutArrowType == 0
+                                          ? ConnectionArrowType.Normal
+                                          : ConnectionArrowType.OutArrowType;
+            }
 
             Chance = chance;
 
@@ -185,8 +206,6 @@ namespace CourseWork.Templates
             Y2 = toPoint.Y;
         }
 
-        public ConnectionArrowType ConnectionArrowType { get; private set; }
-
         private void InternalDrawArrowGeometry(StreamGeometryContext context)
         {
             Point pt1, pt2, pt3, pt4;
@@ -245,39 +264,34 @@ namespace CourseWork.Templates
                         break;
                 }
             }
+            else if (ConnectionArrowType == ConnectionArrowType.Loopback)
+            {
+                    pt1 = new Point(FromItem.Position.X - 5, FromItem.Position.Y + 83);
+                    pt2 = new Point(pt1.X + 10, pt1.Y - 10);
+
+                    pt3 = new Point(pt2.X - 4, pt2.Y + 9);
+                    pt4 = new Point(pt2.X - 6, pt2.Y + 16);
+
+                    context.BeginFigure(pt1, true, false);
+                    context.ArcTo(pt2, new Size(6, 6), 125, true, SweepDirection.Clockwise, true, true);
+                    context.ArcTo(pt1, new Size(6, 6), 125, true, SweepDirection.Clockwise, true, true);
+                    context.LineTo(pt3, true, true);
+                    context.LineTo(pt1, true, true);
+                    context.LineTo(pt4, true, true);
+            }
             else
             {
-                switch (ViewType)
-                {
-                    case 0: // овал
-                        pt1 = new Point(X1 + 20, Y1 - 25);
-                        pt2 = new Point(pt1.X + 10, pt1.Y - 10);
+                pt1 = new Point(X1 + 20, Y1 - 25);
+                pt2 = new Point(pt1.X + 10, pt1.Y - 10);
 
-                        pt3 = new Point(pt1.X + 5, pt1.Y + 3);
-                        pt4 = new Point(pt1.X + 5, pt1.Y - 3);
+                pt3 = new Point(pt2.X - 6, pt2.Y + 2);
+                pt4 = new Point(pt2.X - 2, pt2.Y + 6);
 
-                        context.BeginFigure(pt1, true, false);
-                        context.ArcTo(pt2, new Size(8, 8), 135, false, SweepDirection.Clockwise, true, true);
-                        context.ArcTo(pt1, new Size(8, 8), 135, false, SweepDirection.Clockwise, true, true);
-                        context.LineTo(pt3, true, true);
-                        context.LineTo(pt1, true, true);
-                        context.LineTo(pt4, true, true);
-                        break;
-
-                    case 1: // стрелка
-                        pt1 = new Point(X1 + 20, Y1 - 25);
-                        pt2 = new Point(pt1.X + 10, pt1.Y - 10);
-
-                        pt3 = new Point(pt2.X - 6, pt2.Y + 2);
-                        pt4 = new Point(pt2.X - 2, pt2.Y + 6);
-
-                        context.BeginFigure(pt1, true, false);
-                        context.LineTo(pt2, true, true);
-                        context.LineTo(pt3, true, true);
-                        context.LineTo(pt2, true, true);
-                        context.LineTo(pt4, true, true);
-                        break;
-                }
+                context.BeginFigure(pt1, true, false);
+                context.LineTo(pt2, true, true);
+                context.LineTo(pt3, true, true);
+                context.LineTo(pt2, true, true);
+                context.LineTo(pt4, true, true);
             }
 
         }

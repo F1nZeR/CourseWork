@@ -12,7 +12,21 @@
     
     <Grid>
         <Templates:DrawCanvas x:Name="drawCanvas" Background="Transparent"/>
-        
+
+        <Canvas
+            x:Name="dragSelectionCanvas"
+            Visibility="Collapsed"
+            >
+            <Border 
+                x:Name="dragSelectionBorder"
+                BorderBrush="Blue"
+                BorderThickness="1"
+                Background="LightBlue"
+                CornerRadius="1"
+                Opacity="0.5"
+                />
+        </Canvas>
+
         <WrapPanel>
             <Expander Header="Добавить элемент" Width="128">
                 <StackPanel>
@@ -36,11 +50,11 @@
 
             <Expander Header="Вид">
                 <StackPanel>
-                    <Label Content="Замыкание:" />
+                    <Label Content="Выход:" />
                     <ComboBox 
-                        SelectedIndex="{Binding Source={StaticResource odpSettings}, Path=Default.LoopbackType}"
+                        SelectedIndex="{Binding Source={StaticResource odpSettings}, Path=Default.OutArrowType}"
                         SelectionChanged="ComboBoxLoopbackViewSelectionChanged">
-                        <ComboBoxItem Content="Овал" />
+                        <ComboBoxItem Content="Обычный" />
                         <ComboBoxItem Content="Стрелка" />
                     </ComboBox>
                     <Label Content="Link:" />

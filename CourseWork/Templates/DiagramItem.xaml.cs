@@ -133,7 +133,8 @@ namespace CourseWork.Templates
         public void RemoveDragEffect()
         {
             this.Effect = null;
-            Canvas.SetZIndex(this, _oldZIndex);
+            //Canvas.SetZIndex(this, _oldZIndex);
+            Canvas.SetZIndex(this, 0);
         }
     }
 }

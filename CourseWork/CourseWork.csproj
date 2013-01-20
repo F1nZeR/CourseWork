@@ -64,6 +64,7 @@
     <Compile Include="Templates\DrawControl.xaml.cs">
       <DependentUpon>DrawControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\Helpers\VisualHelper.cs" />
     <Compile Include="Utilities\Helpers\MatrixHelper.cs" />
     <Compile Include="Windows\ChangeLinkWindow.xaml.cs">
       <DependentUpon>ChangeLinkWindow.xaml</DependentUpon>

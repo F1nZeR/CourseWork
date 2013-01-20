@@ -25,6 +25,11 @@ namespace CourseWork.Templates
         {
             InitializeComponent();
             this.PreviewKeyDown += OnPreviewKeyDown;
+            this.Loaded += (sender, args) =>
+                               {
+                                   drawCanvas.DragSelectionBorder = dragSelectionBorder;
+                                   drawCanvas.DragSelectionCanvas = dragSelectionCanvas;
+                               };
         }
 
         private void OnPreviewKeyDown(object sender, KeyEventArgs e)
@@ -169,12 +174,14 @@ namespace CourseWork.Templates
 
         private void ComboBoxLoopbackViewSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Properties.Settings.Default.LoopbackType = ((ComboBox) sender).SelectedIndex;
+            Properties.Settings.Default.OutArrowType = ((ComboBox) sender).SelectedIndex;
             Properties.Settings.Default.Save();
             foreach (var item in DiagramItemManager.Instance.ConnectionArrows.Where(
-                    x => x.ConnectionArrowType == ConnectionArrowType.Loopback))
+                    x => x.TargetItem.DiagramItemType == DiagramItemType.BufferOut))
             {
-                item.ViewType = Properties.Settings.Default.LoopbackType;
+                item.ConnectionArrowType = Properties.Settings.Default.OutArrowType == 0
+                                               ? ConnectionArrowType.Normal
+                                               : ConnectionArrowType.OutArrowType;
             }
         }
 

@@ -26,12 +26,12 @@ namespace CourseWork.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int LoopbackType {
+        public int OutArrowType {
             get {
-                return ((int)(this["LoopbackType"]));
+                return ((int)(this["OutArrowType"]));
             }
             set {
-                this["LoopbackType"] = value;
+                this["OutArrowType"] = value;
             }
         }
         
