@@ -5,18 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:Templates="clr-namespace:CourseWork.Templates" mc:Ignorable="d" 
              xmlns:Properties="clr-namespace:CourseWork.Properties"
+             xmlns:WindowsPresentation="clr-namespace:GMap.NET.WindowsPresentation;assembly=GMap.NET.WindowsPresentation"
              d:DesignHeight="362" d:DesignWidth="457">
     <UserControl.Resources>
         <ObjectDataProvider x:Key="odpSettings" ObjectType="{x:Type Properties:Settings}" />
     </UserControl.Resources>
     
     <Grid>
+        <WindowsPresentation:GMapControl x:Name="MainMap" Zoom="13" MaxZoom="24" MinZoom="1" />
         <Templates:DrawCanvas x:Name="drawCanvas" Background="Transparent"/>
 
-        <Canvas
-            x:Name="dragSelectionCanvas"
-            Visibility="Collapsed"
-            >
+        <Canvas x:Name="dragSelectionCanvas" Visibility="Collapsed">
             <Border 
                 x:Name="dragSelectionBorder"
                 BorderBrush="Blue"

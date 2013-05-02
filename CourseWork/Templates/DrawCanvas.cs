@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Effects;
 using System.Windows.Shapes;
 using CourseWork.Manager;
+using CourseWork.Maps;
 using CourseWork.Utilities.Helpers;
 
 namespace CourseWork.Templates
@@ -103,6 +104,7 @@ namespace CourseWork.Templates
                             item.Value.Y;
 
                         selectedItem.Move(elementLeft, elementTop);
+                        MapHelper.Instance.UpdateLatLngPoses(selectedItem);
                     }
                 }
 
@@ -170,7 +172,7 @@ namespace CourseWork.Templates
             DragSelectionBorder.Height = height;
         }
 
-        private void ClearSelection()
+        public void ClearSelection()
         {
             foreach (var item in DiagramItemManager.Instance.SelectedItems)
             {

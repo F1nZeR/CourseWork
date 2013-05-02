@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
+using GMap.NET;
 
 namespace CourseWork.Templates
 {
@@ -19,6 +20,7 @@ namespace CourseWork.Templates
 
     public partial class DiagramItem : UserControl
     {
+        public PointLatLng PositionLatLng { get; set; }
         private int _oldZIndex;
 
         public DiagramItemType DiagramItemType { get; private set; }
@@ -84,11 +86,15 @@ namespace CourseWork.Templates
             }
         }
 
+        private static readonly Random _rnd = new Random();
+
         public DiagramItem(string name, DiagramItemType type, double x = 0, double y = 0)
         {
             InitializeComponent();
             this.DataContext = this;
             ConnectionArrows = new List<ConnectionArrow>();
+
+            this.PositionLatLng = new PointLatLng(_rnd.Next(150) - 75, _rnd.Next(150) - 75);
 
             labelName.Content = name;
             DiagramItemType = type;

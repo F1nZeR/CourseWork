@@ -15,7 +15,14 @@ namespace CourseWork
         public MainWindow()
         {
             InitializeComponent();
-            this.Loaded += OnLoaded;
+            Loaded += OnLoaded;
+            Closed += (sender, args) => Application.Current.Shutdown();
+            SizeChanged += OnSizeChanged;
+        }
+
+        private void OnSizeChanged(object sender, SizeChangedEventArgs sizeChangedEventArgs)
+        {
+            drawControl.ReDrawElements();
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)

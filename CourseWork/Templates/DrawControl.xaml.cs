@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using CourseWork.Manager;
+using CourseWork.Maps;
+using CourseWork.Properties;
+using GMap.NET;
+using GMap.NET.MapProviders;
+using GMap.NET.WindowsPresentation;
 
 namespace CourseWork.Templates
 {
@@ -21,15 +19,73 @@ namespace CourseWork.Templates
     /// </summary>
     public partial class DrawControl : UserControl
     {
+        private bool _isRightBtnPressed = false;
+
         public DrawControl()
         {
             InitializeComponent();
-            this.PreviewKeyDown += OnPreviewKeyDown;
-            this.Loaded += (sender, args) =>
-                               {
-                                   drawCanvas.DragSelectionBorder = dragSelectionBorder;
-                                   drawCanvas.DragSelectionCanvas = dragSelectionCanvas;
-                               };
+
+            MainMap.MapProvider = GMapProviders.GoogleMap;
+            MainMap.MouseWheelZoomType = MouseWheelZoomType.MousePositionWithoutCenter;
+            MainMap.Position = new PointLatLng(54.6961334816182, 25.2985095977783);
+
+            PreviewKeyDown += OnPreviewKeyDown;
+            Loaded += OnLoaded;
+
+            PreviewMouseRightButtonDown += OnPreviewMouseRightButtonDown;
+            PreviewMouseRightButtonUp += OnPreviewMouseRightButtonUp;
+            PreviewMouseWheel += OnPreviewMouseWheel;
+            PreviewMouseMove += OnPreviewMouseMove;
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
+        {
+            drawCanvas.DragSelectionBorder = dragSelectionBorder;
+            drawCanvas.DragSelectionCanvas = dragSelectionCanvas;
+
+            MapHelper.SetInstance(MainMap);
+            ReDrawElements();
+        }
+
+        private void OnPreviewMouseMove(object sender, MouseEventArgs mouseEventArgs)
+        {
+            if (_isRightBtnPressed) ReDrawElements();
+        }
+
+        private void OnPreviewMouseWheel(object sender, MouseWheelEventArgs mouseWheelEventArgs)
+        {
+            var delta = mouseWheelEventArgs.Delta > 0 ? 1 : -1;
+            MainMap.Zoom += delta;
+            // приближаем - двигаем; отодвигаем - оставляем на месте
+            if (delta > 0) {
+                MainMap.Position = MainMap.FromLocalToLatLng(Convert.ToInt32(Mouse.GetPosition(MainMap).X),
+                                                         Convert.ToInt32(Mouse.GetPosition(MainMap).Y));
+            }
+
+            ReDrawElements();
+        }
+
+        public void ReDrawElements()
+        {
+            foreach (var diagramItem in DiagramItemManager.Instance.Items)
+            {
+                var point = MainMap.FromLatLngToLocal(diagramItem.PositionLatLng);
+                diagramItem.Move(point.X, point.Y);
+            }
+        }
+
+        private void OnPreviewMouseRightButtonUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        {
+            drawCanvas.Background = Brushes.Transparent;
+            _isRightBtnPressed = false;
+        }
+
+        private void OnPreviewMouseRightButtonDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        {
+            drawCanvas.Background = null;
+            drawCanvas.ClearSelection();
+            MainMap.CaptureMouse();
+            _isRightBtnPressed = true;
         }
 
         private void OnPreviewKeyDown(object sender, KeyEventArgs e)
@@ -52,14 +108,14 @@ namespace CourseWork.Templates
 
         private void CheckBoxClickShowInBuffer(object sender, RoutedEventArgs e)
         {
-            var cb = (CheckBox)sender;
+            var cb = (CheckBox) sender;
             if (cb.IsChecked == false)
             {
-                foreach (var item in DiagramItemManager.Instance.Items.Where(
+                foreach (DiagramItem item in DiagramItemManager.Instance.Items.Where(
                     x => x.DiagramItemType == DiagramItemType.BufferIn))
                 {
                     item.Visibility = Visibility.Collapsed;
-                    foreach (var connectionArrow in item.ConnectionArrows)
+                    foreach (ConnectionArrow connectionArrow in item.ConnectionArrows)
                     {
                         connectionArrow.Visibility = Visibility.Collapsed;
                     }
@@ -67,11 +123,11 @@ namespace CourseWork.Templates
             }
             else
             {
-                foreach (var item in DiagramItemManager.Instance.Items.Where(
+                foreach (DiagramItem item in DiagramItemManager.Instance.Items.Where(
                     x => x.DiagramItemType == DiagramItemType.BufferIn))
                 {
                     item.Visibility = Visibility.Visible;
-                    foreach (var connectionArrow in item.ConnectionArrows)
+                    foreach (ConnectionArrow connectionArrow in item.ConnectionArrows)
                     {
                         connectionArrow.Visibility = Visibility.Visible;
                     }
@@ -81,14 +137,14 @@ namespace CourseWork.Templates
 
         private void CheckBoxClickShowOutBuffer(object sender, RoutedEventArgs e)
         {
-            var cb = (CheckBox)sender;
+            var cb = (CheckBox) sender;
             if (cb.IsChecked == false)
             {
-                foreach (var item in DiagramItemManager.Instance.Items.Where(
+                foreach (DiagramItem item in DiagramItemManager.Instance.Items.Where(
                     x => x.DiagramItemType == DiagramItemType.BufferOut))
                 {
                     item.Visibility = Visibility.Collapsed;
-                    foreach (var connectionArrow in item.ConnectionArrows)
+                    foreach (ConnectionArrow connectionArrow in item.ConnectionArrows)
                     {
                         connectionArrow.Visibility = Visibility.Collapsed;
                     }
@@ -96,11 +152,11 @@ namespace CourseWork.Templates
             }
             else
             {
-                foreach (var item in DiagramItemManager.Instance.Items.Where(
+                foreach (DiagramItem item in DiagramItemManager.Instance.Items.Where(
                     x => x.DiagramItemType == DiagramItemType.BufferOut))
                 {
                     item.Visibility = Visibility.Visible;
-                    foreach (var connectionArrow in item.ConnectionArrows)
+                    foreach (ConnectionArrow connectionArrow in item.ConnectionArrows)
                     {
                         connectionArrow.Visibility = Visibility.Visible;
                     }
@@ -110,10 +166,10 @@ namespace CourseWork.Templates
 
         private void CheckBoxClickShowRouting(object sender, RoutedEventArgs e)
         {
-            var cb = (CheckBox)sender;
+            var cb = (CheckBox) sender;
             if (cb.IsChecked == false)
             {
-                foreach (var item in DiagramItemManager.Instance.ConnectionArrows)
+                foreach (ConnectionArrow item in DiagramItemManager.Instance.ConnectionArrows)
                 {
                     item.Visibility = Visibility.Collapsed;
                 }
@@ -144,7 +200,7 @@ namespace CourseWork.Templates
                     items = DiagramItemManager.Instance.ConnectionArrows;
                 }
 
-                foreach (var connectionArrow in items)
+                foreach (ConnectionArrow connectionArrow in items)
                 {
                     connectionArrow.Visibility = Visibility.Visible;
                 }
@@ -153,10 +209,10 @@ namespace CourseWork.Templates
 
         private void CheckBoxClickShowLoopback(object sender, RoutedEventArgs e)
         {
-            var cb = (CheckBox)sender;
+            var cb = (CheckBox) sender;
             if (cb.IsChecked == false)
             {
-                foreach (var item in DiagramItemManager.Instance.ConnectionArrows.Where(
+                foreach (ConnectionArrow item in DiagramItemManager.Instance.ConnectionArrows.Where(
                     x => x.ConnectionArrowType == ConnectionArrowType.Loopback))
                 {
                     item.Visibility = Visibility.Collapsed;
@@ -164,7 +220,7 @@ namespace CourseWork.Templates
             }
             else
             {
-                foreach (var item in DiagramItemManager.Instance.ConnectionArrows.Where(
+                foreach (ConnectionArrow item in DiagramItemManager.Instance.ConnectionArrows.Where(
                     x => x.ConnectionArrowType == ConnectionArrowType.Loopback))
                 {
                     item.Visibility = Visibility.Visible;
@@ -174,12 +230,12 @@ namespace CourseWork.Templates
 
         private void ComboBoxLoopbackViewSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Properties.Settings.Default.OutArrowType = ((ComboBox) sender).SelectedIndex;
-            Properties.Settings.Default.Save();
-            foreach (var item in DiagramItemManager.Instance.ConnectionArrows.Where(
-                    x => x.TargetItem.DiagramItemType == DiagramItemType.BufferOut))
+            Settings.Default.OutArrowType = ((ComboBox) sender).SelectedIndex;
+            Settings.Default.Save();
+            foreach (ConnectionArrow item in DiagramItemManager.Instance.ConnectionArrows.Where(
+                x => x.TargetItem.DiagramItemType == DiagramItemType.BufferOut))
             {
-                item.ConnectionArrowType = Properties.Settings.Default.OutArrowType == 0
+                item.ConnectionArrowType = Settings.Default.OutArrowType == 0
                                                ? ConnectionArrowType.Normal
                                                : ConnectionArrowType.OutArrowType;
             }
@@ -187,12 +243,12 @@ namespace CourseWork.Templates
 
         private void ComboBoxNormalArrowViewSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Properties.Settings.Default.NormalArrowType = ((ComboBox)sender).SelectedIndex;
-            Properties.Settings.Default.Save();
-            foreach (var item in DiagramItemManager.Instance.ConnectionArrows.Where(
-                    x => x.ConnectionArrowType == ConnectionArrowType.Normal))
+            Settings.Default.NormalArrowType = ((ComboBox) sender).SelectedIndex;
+            Settings.Default.Save();
+            foreach (ConnectionArrow item in DiagramItemManager.Instance.ConnectionArrows.Where(
+                x => x.ConnectionArrowType == ConnectionArrowType.Normal))
             {
-                item.ViewType = Properties.Settings.Default.NormalArrowType;
+                item.ViewType = Settings.Default.NormalArrowType;
             }
         }
     }

@@ -61,10 +61,14 @@ namespace CourseWork.Manager
             _canvas = canvas;
         }
 
+        /// <summary>
+        /// Загрузить элементы из matrix.txt | matrixRow.txt
+        /// </summary>
         public void LoadDefaultElements()
         {
             var matrix = Services.ReadFromFile.ReadMatrix("./matrix.txt");
             var vector = Services.ReadFromFile.ReadMatrixRow("./matrixRow.txt");
+            var positions = Services.ReadFromFile.ReadLatLngPositions("./matrixLatLng.txt");
 
             var outBuffer = new DiagramItem("inBuf", DiagramItemType.BufferIn, 0, 200);
             _canvas.Children.Add(outBuffer);

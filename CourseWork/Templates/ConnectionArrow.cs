@@ -31,7 +31,7 @@ namespace CourseWork.Templates
                 0, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
 
         public static readonly DependencyProperty ConnectionArrowTypeProperty =
-            DependencyProperty.Register("ArrowType", typeof (ConnectionArrowType), typeof (ConnectionArrow),
+            DependencyProperty.Register("ArrowType", typeof(ConnectionArrowType), typeof(ConnectionArrow),
                                         new FrameworkPropertyMetadata(
                                             default(ConnectionArrowType),
                                             FrameworkPropertyMetadataOptions.AffectsRender |
@@ -98,7 +98,7 @@ namespace CourseWork.Templates
             get
             {
                 // Create a StreamGeometry for describing the shape
-                var geometry = new StreamGeometry {FillRule = FillRule.EvenOdd};
+                var geometry = new StreamGeometry { FillRule = FillRule.EvenOdd };
 
                 using (StreamGeometryContext context = geometry.Open())
                 {
@@ -241,11 +241,11 @@ namespace CourseWork.Templates
                         pt2 = new Point(X2, Y2);
 
                         var ptTemp1 = new Point(
-                            X1 - (X1-X2) / 2,
+                            X1 - (X1 - X2) / 2,
                             Y1 - (Y1 - Y2) / 3);
 
                         var ptTemp2 = new Point(
-                            X1 - (X1-X2) / 4 * 3,
+                            X1 - (X1 - X2) / 4 * 3,
                             Y1 - (Y1 - Y2) / 3 * 2);
 
                         pt3 = new Point(
@@ -266,18 +266,18 @@ namespace CourseWork.Templates
             }
             else if (ConnectionArrowType == ConnectionArrowType.Loopback)
             {
-                    pt1 = new Point(FromItem.Position.X - 5, FromItem.Position.Y + 83);
-                    pt2 = new Point(pt1.X + 10, pt1.Y - 10);
+                pt1 = new Point(FromItem.Position.X - 5, FromItem.Position.Y + 83);
+                pt2 = new Point(pt1.X + 10, pt1.Y - 10);
 
-                    pt3 = new Point(pt2.X - 4, pt2.Y + 9);
-                    pt4 = new Point(pt2.X - 6, pt2.Y + 16);
+                pt3 = new Point(pt2.X - 4, pt2.Y + 9);
+                pt4 = new Point(pt2.X - 6, pt2.Y + 16);
 
-                    context.BeginFigure(pt1, true, false);
-                    context.ArcTo(pt2, new Size(6, 6), 125, true, SweepDirection.Clockwise, true, true);
-                    context.ArcTo(pt1, new Size(6, 6), 125, true, SweepDirection.Clockwise, true, true);
-                    context.LineTo(pt3, true, true);
-                    context.LineTo(pt1, true, true);
-                    context.LineTo(pt4, true, true);
+                context.BeginFigure(pt1, true, false);
+                context.ArcTo(pt2, new Size(6, 6), 125, true, SweepDirection.Clockwise, true, true);
+                context.ArcTo(pt1, new Size(6, 6), 125, true, SweepDirection.Clockwise, true, true);
+                context.LineTo(pt3, true, true);
+                context.LineTo(pt1, true, true);
+                context.LineTo(pt4, true, true);
             }
             else
             {
