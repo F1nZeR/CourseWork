@@ -44,6 +44,11 @@ namespace CourseWork.Templates
             drawCanvas.DragSelectionCanvas = dragSelectionCanvas;
 
             MapHelper.SetInstance(MainMap);
+
+            if (DiagramItemManager.Instance.Items.Any(x => Math.Abs(x.PositionLatLng.Lat) < 0.01))
+            {
+                DiagramItemManager.Instance.Items.ForEach(item => MapHelper.Instance.UpdateLatLngPoses(item));
+            }
             ReDrawElements();
         }
 
@@ -56,13 +61,14 @@ namespace CourseWork.Templates
         {
             var delta = mouseWheelEventArgs.Delta > 0 ? 1 : -1;
             MainMap.Zoom += delta;
-            // приближаем - двигаем; отодвигаем - оставляем на месте
+            // приближаем - двигаем к курсору; отодвигаем - оставляем на месте
             if (delta > 0) {
                 MainMap.Position = MainMap.FromLocalToLatLng(Convert.ToInt32(Mouse.GetPosition(MainMap).X),
                                                          Convert.ToInt32(Mouse.GetPosition(MainMap).Y));
             }
 
             ReDrawElements();
+            drawCanvas.CheckDistance();
         }
 
         public void ReDrawElements()

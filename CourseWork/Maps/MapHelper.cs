@@ -30,8 +30,8 @@ namespace CourseWork.Maps
 
         public void UpdateLatLngPoses(DiagramItem item)
         {
-            item.PositionLatLng = _map.FromLocalToLatLng(Convert.ToInt32(item.Position.X),
-                                                         Convert.ToInt32(item.Position.Y));
+            item.PositionLatLng = _map.FromLocalToLatLng(Convert.ToInt32(item.CenterPoint.X),
+                                                         Convert.ToInt32(item.CenterPoint.Y));
         }
     }
 }

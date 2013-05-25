@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Effects;
 using System.Windows.Shapes;
 using CourseWork.Manager;
 using CourseWork.Maps;
@@ -25,10 +22,11 @@ namespace CourseWork.Templates
             DiagramItemManager.SetInstance(this);
         }
 
-        private Point _startPoint, origMouseDownPoint;
-        private bool _isDragging, _addNewElement, isLeftMouseButtonDownOnWindow, isDraggingSelectionRect;
+        private Point _startPoint, _origMouseDownPoint;
+        private bool _isDragging, _addNewElement, _isLeftMouseButtonDownOnWindow, _isDraggingSelectionRect;
         private DiagramItem _selectedElement, _fromElement;
-        private int _idOfNewElement, DragThreshold = 5;
+        private int _idOfNewElement;
+        private const int DragThreshold = 5;
         private Line _line;
         private readonly Dictionary<DiagramItem, Point> _selectedItems = new Dictionary<DiagramItem, Point>();
         public Canvas DragSelectionCanvas { get; set; }
@@ -54,17 +52,17 @@ namespace CourseWork.Templates
                     }
                 }
 
-                if (isDraggingSelectionRect)
+                if (_isDraggingSelectionRect)
                 {
-                    isDraggingSelectionRect = false;
+                    _isDraggingSelectionRect = false;
                     ApplyDragSelectionRect();
 
                     e.Handled = true;
                 }
 
-                if (isLeftMouseButtonDownOnWindow)
+                if (_isLeftMouseButtonDownOnWindow)
                 {
-                    isLeftMouseButtonDownOnWindow = false;
+                    _isLeftMouseButtonDownOnWindow = false;
                     this.ReleaseMouseCapture();
 
                     e.Handled = true;
@@ -82,9 +80,9 @@ namespace CourseWork.Templates
                 _line.X2 = e.GetPosition(this).X;
                 _line.Y2 = e.GetPosition(this).Y;
             }
-            if (this.IsMouseCaptured)
+            if (IsMouseCaptured)
             {
-                Point currentPosition = e.GetPosition(this);
+                var currentPosition = e.GetPosition(this);
                 if (Math.Abs((_startPoint - currentPosition).Length) > DragThreshold)
                 {
                     _isDragging = true;
@@ -108,24 +106,24 @@ namespace CourseWork.Templates
                     }
                 }
 
-                if (isDraggingSelectionRect)
+                if (_isDraggingSelectionRect)
                 {
                     Point curMouseDownPoint = e.GetPosition(this);
-                    UpdateDragSelectionRect(origMouseDownPoint, curMouseDownPoint);
+                    UpdateDragSelectionRect(_origMouseDownPoint, curMouseDownPoint);
 
                     e.Handled = true;
                 }
-                else if (isLeftMouseButtonDownOnWindow)
+                else if (_isLeftMouseButtonDownOnWindow)
                 {
                     Point curMouseDownPoint = e.GetPosition(this);
-                    var dragDelta = curMouseDownPoint - origMouseDownPoint;
+                    var dragDelta = curMouseDownPoint - _origMouseDownPoint;
                     double dragDistance = Math.Abs(dragDelta.Length);
                     if (dragDistance > DragThreshold)
                     {
-                        isDraggingSelectionRect = true;
+                        _isDraggingSelectionRect = true;
                         ClearSelection();
 
-                        InitDragSelectionRect(origMouseDownPoint, curMouseDownPoint);
+                        InitDragSelectionRect(_origMouseDownPoint, curMouseDownPoint);
                     }
 
                     e.Handled = true;
@@ -217,8 +215,8 @@ namespace CourseWork.Templates
             {
                 ClearSelection();
 
-                isLeftMouseButtonDownOnWindow = true;
-                origMouseDownPoint = e.GetPosition(this);
+                _isLeftMouseButtonDownOnWindow = true;
+                _origMouseDownPoint = e.GetPosition(this);
 
                 this.CaptureMouse();
                 return;
@@ -259,7 +257,7 @@ namespace CourseWork.Templates
                 foreach (var selectedItem in DiagramItemManager.Instance.SelectedItems)
                 {
                     //selectedItem.AddDragEffect();
-                    _selectedItems.Add(selectedItem, selectedItem.Position);
+                    _selectedItems.Add(selectedItem, selectedItem.CenterPoint);
                 }
             }
             e.Handled = true;
@@ -288,6 +286,31 @@ namespace CourseWork.Templates
             _addNewElement = false;
             this.Children.Remove(_line);
             Mouse.SetCursor(Cursors.Arrow);
+        }
+
+        /// <summary>
+        /// Проверка на порог расстояния между элементами
+        /// </summary>
+        public void CheckDistance()
+        {
+            const int replDistance = 25;
+
+            DiagramItemManager.Instance.Items.ForEach(x => x.Visibility = Visibility.Visible);
+            for (int i = 0; i < DiagramItemManager.Instance.Items.Count - 1; i++)
+            {
+                for (int j = i + 1; j < DiagramItemManager.Instance.Items.Count; j++)
+                {
+                    var d1 = DiagramItemManager.Instance.Items[i];
+                    var d2 = DiagramItemManager.Instance.Items[j];
+                    var distance = MathHelper.Distance(d1.CenterPoint, d2.CenterPoint);
+                    if (distance < replDistance)
+                    {
+                        // TODO: заменять одним объектом
+                        d1.Visibility = Visibility.Hidden;
+                        MessageBox.Show(distance.ToString());
+                    }
+                }
+            }
         }
     }
 }

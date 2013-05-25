@@ -86,7 +86,6 @@ namespace CourseWork.Templates
             }
         }
 
-        private static readonly Random _rnd = new Random();
 
         public DiagramItem(string name, DiagramItemType type, double x = 0, double y = 0)
         {
@@ -94,7 +93,6 @@ namespace CourseWork.Templates
             this.DataContext = this;
             ConnectionArrows = new List<ConnectionArrow>();
 
-            this.PositionLatLng = new PointLatLng(_rnd.Next(150) - 75, _rnd.Next(150) - 75);
 
             labelName.Content = name;
             DiagramItemType = type;
@@ -111,7 +109,7 @@ namespace CourseWork.Templates
                     break;
             }
 
-            this.Move(x, y);
+            Move(x, y);
         }
 
         private void UpdateConnectionArrows()
@@ -122,10 +120,14 @@ namespace CourseWork.Templates
             }
         }
 
+        /// <summary>
+        /// Переместить элемент с привязкой к левому верхнему углу
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         public void Move(double x, double y)
         {
-            Canvas.SetLeft(this, x);
-            Canvas.SetTop(this, y);
+            CenterPoint = new Point(x, y);
             UpdateConnectionArrows();
         }
 
