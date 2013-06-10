@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Windows;
 using CourseWork.Templates;
+using GMap.NET;
 using GMap.NET.WindowsPresentation;
 
 namespace CourseWork.Maps
@@ -28,6 +30,10 @@ namespace CourseWork.Maps
             _map = map;
         }
 
+        /// <summary>
+        /// Обновить положение элемента (с LatLng)
+        /// </summary>
+        /// <param name="item"></param>
         public void UpdateLatLngPoses(DiagramItem item)
         {
             item.PositionLatLng = _map.FromLocalToLatLng(Convert.ToInt32(item.CenterPoint.X),

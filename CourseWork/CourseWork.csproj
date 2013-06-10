@@ -61,10 +61,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Constants.cs" />
     <Compile Include="Manager\DiagramItemManager.cs" />
     <Compile Include="Maps\MapHelper.cs" />
     <Compile Include="Services\Matrix.cs" />
     <Compile Include="Services\ReadFromFile.cs" />
+    <Compile Include="Services\SaveToFile.cs" />
     <Compile Include="Templates\DiagramItem.xaml.cs">
       <DependentUpon>DiagramItem.xaml</DependentUpon>
     </Compile>

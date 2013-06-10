@@ -25,12 +25,12 @@ namespace CourseWork.Utilities.Helpers
             }
         }
 
-        public static void CheckVector(MatrixRow vector)
+        public static void CheckVector(Matrix vector)
         {
             double sum = 0;
-            for (int i = 1; i <= vector.Size; i++)
+            for (int i = 1; i <= vector.Cols; i++)
             {
-                sum += vector[i];
+                sum += vector[1, i];
             }
             if (sum > 1.0f)
             {

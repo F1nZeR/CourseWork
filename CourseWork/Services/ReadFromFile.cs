@@ -8,7 +8,7 @@ namespace CourseWork.Services
 {
     public static class ReadFromFile
     {
-        public static Matrix ReadMatrix(string path)
+        private static Matrix ReadFile(string path)
         {
             var resultMatrix = new Matrix(1, 1);
             FileStream fileStream;
@@ -30,7 +30,7 @@ namespace CourseWork.Services
                 string s;
                 while ((s = streamReader.ReadLine()) != null)
                 {
-                    var row = s.Replace('.', ',').Split(' ').Select(double.Parse).ToArray();
+                    var row = s.Trim().Replace('.', ',').Split(' ').Select(double.Parse).ToArray();
                     rowsCount++; resultMatrix.Resize(rowsCount, row.Count());
                     for (int i = 0; i < row.Count(); i++)
                     {
@@ -46,100 +46,38 @@ namespace CourseWork.Services
             finally
             {
                 streamReader.Close();
-            }
+                streamReader.Dispose();
 
-            MatrixHelper.CheckMatrix(resultMatrix);
+                fileStream.Close();
+                fileStream.Dispose();
+            }
             return resultMatrix;
+        }
+
+        public static Matrix ReadMatrix()
+        {
+            var matrix = ReadFile(Constants.MatrixPath);
+            MatrixHelper.CheckMatrix(matrix);
+            return matrix;
         }
 
         /// <summary>
         /// Считать позиции элементов в LatLng
         /// </summary>
         /// <returns></returns>
-        public static Matrix ReadLatLngPositions(string path)
+        public static Matrix ReadLatLngPositions()
         {
-            var resultMatrix = new Matrix(1, 1);
-            FileStream fileStream;
-
-            try
-            {
-                fileStream = new FileStream(path, FileMode.Open);
-            }
-            catch (IOException exception)
-            {
-                MessageBox.Show(exception.Message);
-                throw;
-            }
-
-            var streamReader = new StreamReader(fileStream);
-            try
-            {
-                int rowsCount = 0;
-                string s;
-                while ((s = streamReader.ReadLine()) != null)
-                {
-                    var row = s.Replace('.', ',').Split(' ').Select(double.Parse).ToArray();
-                    rowsCount++; resultMatrix.Resize(rowsCount, row.Count());
-                    for (int i = 0; i < row.Count(); i++)
-                    {
-                        resultMatrix[rowsCount, i + 1] = row[i];
-                    }
-                }
-            }
-            catch (IOException exception)
-            {
-                MessageBox.Show(exception.Message);
-                throw;
-            }
-            finally
-            {
-                streamReader.Close();
-            }
-
-            return resultMatrix;
+            return ReadFile(Constants.LatLngPath);
         }
 
-        public static MatrixRow ReadMatrixRow(string path)
+        public static Matrix ReadMatrixRow()
         {
-            var resultRow = new MatrixRow(1);
-            FileStream fileStream;
-
-            try
+            var matrix = ReadFile(Constants.VectorPath);
+            for (int i = 0; i < matrix.Rows; i++)
             {
-                fileStream = new FileStream(path, FileMode.Open);
+                MatrixHelper.CheckVector(matrix.GetRow(i+1));
             }
-            catch (IOException exception)
-            {
-                MessageBox.Show(exception.Message);
-                throw;
-            }
-
-            var streamReader = new StreamReader(fileStream);
-            try
-            {
-                var s = streamReader.ReadLine();
-                if (s != null)
-                {
-                    var row = s.Replace('.', ',').Split(' ').Select(double.Parse).ToArray();
-                    resultRow = new MatrixRow(row.Count());
-                    for (int i = 0; i < row.Count(); i++)
-                    {
-                        resultRow[i + 1] = row[i];
-                    }
-                }
-            }
-            catch (IOException exception)
-            {
-                MessageBox.Show(exception.Message);
-                throw;
-            }
-            finally
-            {
-                streamReader.Close();
-            }
-
-            MatrixHelper.CheckVector(resultRow);
-            return resultRow;
+            return matrix;
         }
     }
 }

@@ -86,10 +86,13 @@ namespace CourseWork.Templates
             }
         }
 
+        private static int _currentId = 0;
+        public int Id { get; private set; }
 
         public DiagramItem(string name, DiagramItemType type, double x = 0, double y = 0)
         {
             InitializeComponent();
+            Id = _currentId++;
             this.DataContext = this;
             ConnectionArrows = new List<ConnectionArrow>();
 

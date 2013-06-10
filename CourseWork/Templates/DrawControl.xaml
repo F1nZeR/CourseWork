@@ -29,8 +29,10 @@
         <WrapPanel>
             <Expander Header="Добавить элемент" Width="128">
                 <StackPanel>
-                    <Button Content="Device" Margin="2" Click="ButtonClickAddDevice" />
-                    <Button Content="Link" Margin="2" Click="ButtonClickAddLink"/>
+                    <Button Content="Устройство" Margin="2" Click="ButtonClickAddDevice" />
+                    <Button Content="Входной буффер" Margin="2" Click="ButtonClickAddInBuffer" />
+                    <Separator />
+                    <Button Content="Связь" Margin="2" Click="ButtonClickAddLink"/>
                 </StackPanel>
             </Expander>
 
@@ -56,7 +58,7 @@
                         <ComboBoxItem Content="Обычный" />
                         <ComboBoxItem Content="Стрелка" />
                     </ComboBox>
-                    <Label Content="Link:" />
+                    <Label Content="Связь:" />
                     <ComboBox 
                         SelectedIndex="{Binding Source={StaticResource odpSettings}, Path=Default.NormalArrowType}"
                         SelectionChanged="ComboBoxNormalArrowViewSelectionChanged">

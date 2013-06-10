@@ -15,19 +15,26 @@ namespace CourseWork
         public MainWindow()
         {
             InitializeComponent();
-            Loaded += OnLoaded;
-            Closed += (sender, args) => Application.Current.Shutdown();
+            Closed += OnClosed;
+            StateChanged += OnStateChanged;
             SizeChanged += OnSizeChanged;
+        }
+
+        private void OnClosed(object sender, EventArgs eventArgs)
+        {
+            DiagramItemManager.Instance.SaveAll();
+            Application.Current.Shutdown();
+        }
+
+        private void OnStateChanged(object sender, EventArgs eventArgs)
+        {
+            // не сразу обновляет
+            drawControl.ReDrawElements();
         }
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs sizeChangedEventArgs)
         {
             drawControl.ReDrawElements();
-        }
-
-        private void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            DiagramItemManager.Instance.LoadDefaultElements();
         }
     }
 }

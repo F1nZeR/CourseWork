@@ -39,9 +39,9 @@ namespace CourseWork.Templates
                 ResetAddNew();
                 var target = e.Source as DiagramItem;
                 if (target == null) return;
-                DiagramItemManager.Instance.AddNewLink(_fromElement, e.Source as DiagramItem, 0);
+                DiagramItemManager.Instance.AddNewLink(_fromElement, (DiagramItem) e.Source, 0);
             }
-            if (this.IsMouseCaptured)
+            if (IsMouseCaptured)
             {
                 if (_isDragging)
                 {
@@ -204,11 +204,20 @@ namespace CourseWork.Templates
 
         private void CanvasPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (_addNewElement && _idOfNewElement == 0)
+            if (_addNewElement)
             {
-                DiagramItemManager.Instance.AddNewItem(DiagramItemType.Device, e.GetPosition(this));
-                ResetAddNew();
-                return;
+                switch (_idOfNewElement)
+                {
+                    case 0:
+                        DiagramItemManager.Instance.AddNewItem(DiagramItemType.Device, e.GetPosition(this));
+                        ResetAddNew();
+                        return;
+
+                    case 1:
+                        DiagramItemManager.Instance.AddNewItem(DiagramItemType.BufferIn, e.GetPosition(this));
+                        ResetAddNew();
+                        return;
+                }
             }
 
             if (Equals(e.Source, this) || !(e.Source is DiagramItem))
@@ -218,7 +227,7 @@ namespace CourseWork.Templates
                 _isLeftMouseButtonDownOnWindow = true;
                 _origMouseDownPoint = e.GetPosition(this);
 
-                this.CaptureMouse();
+                CaptureMouse();
                 return;
             }
 
@@ -249,7 +258,7 @@ namespace CourseWork.Templates
                     _selectedElement.IsSelected = true;
                 }
 
-                this.CaptureMouse();
+                CaptureMouse();
 
                 //_isDragging = true;
 
@@ -263,6 +272,10 @@ namespace CourseWork.Templates
             e.Handled = true;
         }
 
+        /// <summary>
+        /// Добавление элемента на Canvas
+        /// </summary>
+        /// <param name="id">0 устр-во; 1 - вх. буффер; 2 - связь</param>
         public void StartAddNewElement(int id)
         {
             foreach (var result in this.Children.OfType<ConnectionArrow>())
@@ -274,9 +287,12 @@ namespace CourseWork.Templates
             _idOfNewElement = id;
 
             _line = new Line();
-            this.Children.Add(_line);
+            Children.Add(_line);
         }
 
+        /// <summary>
+        /// Выключить режим добавления
+        /// </summary>
         public void ResetAddNew()
         {
             foreach (var result in this.Children.OfType<ConnectionArrow>())
@@ -294,7 +310,6 @@ namespace CourseWork.Templates
         public void CheckDistance()
         {
             const int replDistance = 25;
-
             DiagramItemManager.Instance.Items.ForEach(x => x.Visibility = Visibility.Visible);
             for (int i = 0; i < DiagramItemManager.Instance.Items.Count - 1; i++)
             {

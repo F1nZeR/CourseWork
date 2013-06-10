@@ -27,7 +27,7 @@ namespace CourseWork.Templates
 
             MainMap.MapProvider = GMapProviders.GoogleMap;
             MainMap.MouseWheelZoomType = MouseWheelZoomType.MousePositionWithoutCenter;
-            MainMap.Position = new PointLatLng(54.6961334816182, 25.2985095977783);
+            MainMap.Position = new PointLatLng(58, -37);
 
             PreviewKeyDown += OnPreviewKeyDown;
             Loaded += OnLoaded;
@@ -40,10 +40,11 @@ namespace CourseWork.Templates
 
         private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
+            MapHelper.SetInstance(MainMap);
+            DiagramItemManager.Instance.LoadDefaultElements();
+
             drawCanvas.DragSelectionBorder = dragSelectionBorder;
             drawCanvas.DragSelectionCanvas = dragSelectionCanvas;
-
-            MapHelper.SetInstance(MainMap);
 
             if (DiagramItemManager.Instance.Items.Any(x => Math.Abs(x.PositionLatLng.Lat) < 0.01))
             {
@@ -107,9 +108,14 @@ namespace CourseWork.Templates
             drawCanvas.StartAddNewElement(0);
         }
 
-        private void ButtonClickAddLink(object sender, RoutedEventArgs e)
+        private void ButtonClickAddInBuffer(object sender, RoutedEventArgs e)
         {
             drawCanvas.StartAddNewElement(1);
+        }
+
+        private void ButtonClickAddLink(object sender, RoutedEventArgs e)
+        {
+            drawCanvas.StartAddNewElement(2);
         }
 
         private void CheckBoxClickShowInBuffer(object sender, RoutedEventArgs e)
