@@ -31,13 +31,23 @@ namespace CourseWork.Maps
         }
 
         /// <summary>
-        /// Обновить положение элемента (с LatLng)
+        /// Обновить положение элемента относительно экранных координат
         /// </summary>
         /// <param name="item"></param>
         public void UpdateLatLngPoses(DiagramItem item)
         {
             item.PositionLatLng = _map.FromLocalToLatLng(Convert.ToInt32(item.CenterPoint.X),
                                                          Convert.ToInt32(item.CenterPoint.Y));
+        }
+
+        /// <summary>
+        /// Обновить положение элемента на экрани относительно его LatLng
+        /// </summary>
+        /// <param name="item"></param>
+        public void UpdateScreenCoords(DiagramItem item)
+        {
+            var point = _map.FromLatLngToLocal(item.PositionLatLng);
+            item.CenterPoint = new Point(point.X, point.Y);
         }
     }
 }

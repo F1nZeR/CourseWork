@@ -77,9 +77,19 @@ namespace CourseWork.Manager
             for (int i = 0; i < vector.Rows; i++)
             {
                 inBuffers[i] = AddNewItem(DiagramItemType.BufferIn, new Point(30, 240 + 100*i));
+                if (fromFileCoords)
+                {
+                    inBuffers[i].PositionLatLng = new PointLatLng(positions[i + 1, 1], positions[i + 1, 2]);
+                    Maps.MapHelper.Instance.UpdateScreenCoords(inBuffers[i]);
+                }
             }
 
             var outBuffer = new DiagramItem("outBuf", DiagramItemType.BufferOut, _canvas.ActualWidth - 60, 200);
+            if (fromFileCoords)
+            {
+                outBuffer.PositionLatLng = new PointLatLng(positions[vector.Rows + 1, 1], positions[vector.Rows + 1, 2]);
+                Maps.MapHelper.Instance.UpdateScreenCoords(outBuffer);
+            }
             _canvas.Children.Add(outBuffer);
 
 
@@ -87,7 +97,12 @@ namespace CourseWork.Manager
             for (int i = 1; i <= matrix.Rows; i++)
             {
                 var dItem = AddNewItem(DiagramItemType.Device, new Point(curX + 30, curY + 40));
-                if (fromFileCoords) dItem.PositionLatLng = new PointLatLng(vector[i, 1], vector[i, 2]);
+                if (fromFileCoords)
+                {
+                    dItem.PositionLatLng = new PointLatLng(positions[vector.Rows + 1 + i, 1],
+                                                           positions[vector.Rows + 1 + i, 2]);
+                    Maps.MapHelper.Instance.UpdateScreenCoords(dItem);
+                }
 
                 for (int vectIndex = 1; vectIndex <= vector.Rows; vectIndex++)
                 {
