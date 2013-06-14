@@ -97,7 +97,6 @@ namespace CourseWork.Templates
         {
             get
             {
-                // Create a StreamGeometry for describing the shape
                 var geometry = new StreamGeometry { FillRule = FillRule.EvenOdd };
 
                 using (StreamGeometryContext context = geometry.Open())
@@ -105,7 +104,6 @@ namespace CourseWork.Templates
                     InternalDrawArrowGeometry(context);
                 }
 
-                // Freeze the geometry for performance benefits
                 geometry.Freeze();
 
                 return geometry;
@@ -154,17 +152,23 @@ namespace CourseWork.Templates
             this.ToolTip = string.Format("{0}%", Chance * 100);
         }
 
+        /// <summary>
+        /// Применить цветной стиль для линии
+        /// </summary>
         private void SetColoredStyle()
         {
-            this.Stroke = Brushes.Red;
-            this.StrokeThickness = 3;
+            Stroke = Brushes.Red;
+            StrokeThickness = 3;
             Canvas.SetZIndex(this, int.MaxValue);
         }
 
+        /// <summary>
+        /// Вернуть стиль по-умолчанию для линии
+        /// </summary>
         private void SetDeafultStyle()
         {
-            this.Stroke = Brushes.Black;
-            this.StrokeThickness = 1.5;
+            Stroke = Brushes.Black;
+            StrokeThickness = 1.5;
             Canvas.SetZIndex(this, 1);
             HeadHeight = 4;
             HeadWidth = 10;
@@ -180,17 +184,19 @@ namespace CourseWork.Templates
                                         Left = e.GetPosition(this).X,
                                         Title = (this.Chance * 100) + "%"
                                     };
-                this.SetColoredStyle();
+
+                SetColoredStyle();
                 wndChange.ShowDialog();
-                this.SetDeafultStyle();
+                SetDeafultStyle();
+
                 var chance = wndChange.Chance;
                 if (chance == 0) return;
-                var tempChance = this.Chance;
-                this.Chance = chance;
+                var tempChance = Chance;
+                Chance = chance;
                 if (FromItem.SumChanceOut > 1)
                 {
                     MessageBox.Show("Сумма вероятностей > 100%", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
-                    this.Chance = tempChance;
+                    Chance = tempChance;
                 }
             }
         }

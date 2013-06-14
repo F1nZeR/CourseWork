@@ -10,7 +10,6 @@ using CourseWork.Maps;
 using CourseWork.Properties;
 using GMap.NET;
 using GMap.NET.MapProviders;
-using GMap.NET.WindowsPresentation;
 
 namespace CourseWork.Templates
 {
@@ -19,7 +18,7 @@ namespace CourseWork.Templates
     /// </summary>
     public partial class DrawControl : UserControl
     {
-        private bool _isRightBtnPressed = false;
+        private bool _isRightBtnPressed;
 
         public DrawControl()
         {
@@ -36,12 +35,17 @@ namespace CourseWork.Templates
             PreviewMouseRightButtonUp += OnPreviewMouseRightButtonUp;
             PreviewMouseWheel += OnPreviewMouseWheel;
             PreviewMouseMove += OnPreviewMouseMove;
+
+            btnAutoSize.Click += (sender, args) => MapHelper.Instance.FitMapToScreen();
         }
 
         private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
             MapHelper.SetInstance(MainMap);
             DiagramItemManager.Instance.LoadDefaultElements();
+            MapHelper.Instance.FitMapToScreen();
+            MainMap.SizeChanged += (o, args) => MapHelper.Instance.ReDrawElements();
+            MainMap.Loaded += (o, args) => MapHelper.Instance.ReDrawElements();
 
             drawCanvas.DragSelectionBorder = dragSelectionBorder;
             drawCanvas.DragSelectionCanvas = dragSelectionCanvas;
@@ -50,35 +54,25 @@ namespace CourseWork.Templates
             {
                 DiagramItemManager.Instance.Items.ForEach(item => MapHelper.Instance.UpdateLatLngPoses(item));
             }
-            ReDrawElements();
+            MapHelper.Instance.ReDrawElements();
+
+            // заполнить комбобокс провайдеров
+            comboBoxMapType.ItemsSource = GMapProviders.List;
+            comboBoxMapType.DisplayMemberPath = "Name";
+            comboBoxMapType.SelectedItem = MainMap.MapProvider;
         }
 
         private void OnPreviewMouseMove(object sender, MouseEventArgs mouseEventArgs)
         {
-            if (_isRightBtnPressed) ReDrawElements();
+            if (_isRightBtnPressed) MapHelper.Instance.ReDrawElements();
         }
 
         private void OnPreviewMouseWheel(object sender, MouseWheelEventArgs mouseWheelEventArgs)
         {
             var delta = mouseWheelEventArgs.Delta > 0 ? 1 : -1;
-            MainMap.Zoom += delta;
-            // приближаем - двигаем к курсору; отодвигаем - оставляем на месте
-            if (delta > 0) {
-                MainMap.Position = MainMap.FromLocalToLatLng(Convert.ToInt32(Mouse.GetPosition(MainMap).X),
-                                                         Convert.ToInt32(Mouse.GetPosition(MainMap).Y));
-            }
-
-            ReDrawElements();
+            MapHelper.Instance.Zoom(delta);
+            
             drawCanvas.CheckDistance();
-        }
-
-        public void ReDrawElements()
-        {
-            foreach (var diagramItem in DiagramItemManager.Instance.Items)
-            {
-                var point = MainMap.FromLatLngToLocal(diagramItem.PositionLatLng);
-                diagramItem.Move(point.X, point.Y);
-            }
         }
 
         private void OnPreviewMouseRightButtonUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)

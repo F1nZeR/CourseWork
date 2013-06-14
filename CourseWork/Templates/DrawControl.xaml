@@ -6,7 +6,7 @@
              xmlns:Templates="clr-namespace:CourseWork.Templates" mc:Ignorable="d" 
              xmlns:Properties="clr-namespace:CourseWork.Properties"
              xmlns:WindowsPresentation="clr-namespace:GMap.NET.WindowsPresentation;assembly=GMap.NET.WindowsPresentation"
-             d:DesignHeight="362" d:DesignWidth="457">
+             d:DesignHeight="362" d:DesignWidth="557">
     <UserControl.Resources>
         <ObjectDataProvider x:Key="odpSettings" ObjectType="{x:Type Properties:Settings}" />
     </UserControl.Resources>
@@ -65,6 +65,19 @@
                         <ComboBoxItem Content="Обычная" />
                         <ComboBoxItem Content="Безье" />
                     </ComboBox>
+                </StackPanel>
+            </Expander>
+            
+            <Expander Header="Карта">
+                <StackPanel>
+                    <Label Content="Провайдер" />
+                    <ComboBox FontSize="12" Name="comboBoxMapType" Height="25.04" VerticalAlignment="Top">
+                        <ComboBox.SelectedItem>
+                            <Binding Path="MapProvider" ElementName="MainMap" />
+                        </ComboBox.SelectedItem>
+                    </ComboBox>
+                    <Separator />
+                    <Button Height="22" Content="Авторазмер" Name="btnAutoSize" />
                 </StackPanel>
             </Expander>
         </WrapPanel>
