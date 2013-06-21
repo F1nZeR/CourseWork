@@ -39,6 +39,11 @@ namespace CourseWork.Manager
                         OrderBy(x => x.Id).ToList();
             }
         }
+
+        public List<GroupDevices> GroupDeviceses
+        {
+            get { return _canvas.Children.OfType<GroupDevices>().OrderBy(x => x.Id).ToList(); }
+        }
          
         public List<ConnectionArrow> ConnectionArrows
         {
@@ -47,7 +52,7 @@ namespace CourseWork.Manager
 
         public List<DiagramItem> Items
         {
-            get { return _canvas.Children.OfType<DiagramItem>().ToList(); }
+            get { return _canvas.Children.OfType<DiagramItem>().OrderBy(x => x.Id).ToList(); }
         }
 
         public List<DiagramItem> SelectedItems
@@ -85,6 +90,7 @@ namespace CourseWork.Manager
             }
 
             var outBuffer = new DiagramItem("outBuf", DiagramItemType.BufferOut, _canvas.ActualWidth - 60, 200);
+
             if (fromFileCoords)
             {
                 outBuffer.PositionLatLng = new PointLatLng(positions[vector.Rows + 1, 1], positions[vector.Rows + 1, 2]);
@@ -147,6 +153,10 @@ namespace CourseWork.Manager
 
                 case DiagramItemType.BufferIn:
                     dItem = new DiagramItem("inBuf", type, pos.X - 30, pos.Y - 40);
+                    break;
+
+                case DiagramItemType.Group:
+                    dItem = new GroupDevices("GROUP", type, pos.X - 30, pos.Y - 40);
                     break;
 
                 default:

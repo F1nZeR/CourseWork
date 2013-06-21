@@ -76,7 +76,7 @@ namespace CourseWork.Services
             var latLngFile = new StreamWriter(Constants.LatLngPath);
             var outLine = new StringBuilder();
 
-            var allItems = DiagramItemManager.Instance.Items.OrderBy(x => x.Id);
+            var allItems = DiagramItemManager.Instance.Items.Where(x => x.DiagramItemType != DiagramItemType.Group);
             foreach (var diagramItem in allItems)
             {
                 outLine.AppendFormat("{0} {1}", diagramItem.PositionLatLng.Lat, diagramItem.PositionLatLng.Lng);

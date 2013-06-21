@@ -36,7 +36,13 @@ namespace CourseWork.Templates
             PreviewMouseWheel += OnPreviewMouseWheel;
             PreviewMouseMove += OnPreviewMouseMove;
 
-            btnAutoSize.Click += (sender, args) => MapHelper.Instance.FitMapToScreen();
+            btnAutoSize.Click += BtnAutoSizeOnClick;
+        }
+
+        private void BtnAutoSizeOnClick(object sender, RoutedEventArgs routedEventArgs)
+        {
+            MapHelper.Instance.FitMapToScreen();
+            MapHelper.Instance.CheckDistance();
         }
 
         private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
@@ -71,8 +77,12 @@ namespace CourseWork.Templates
         {
             var delta = mouseWheelEventArgs.Delta > 0 ? 1 : -1;
             MapHelper.Instance.Zoom(delta);
-            
-            drawCanvas.CheckDistance();
+            foreach (var groupDevicese in DiagramItemManager.Instance.GroupDeviceses)
+            {
+                groupDevicese.Decompose();
+                drawCanvas.Children.Remove(groupDevicese);
+            }
+            MapHelper.Instance.CheckDistance();
         }
 
         private void OnPreviewMouseRightButtonUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
@@ -83,6 +93,10 @@ namespace CourseWork.Templates
 
         private void OnPreviewMouseRightButtonDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
+            // обработка события MouseRightDown на элементах
+            if (DiagramItemManager.Instance.Items.Any(x => x.IsMouseOver)) return;
+
+            // иначе передвижение карты
             drawCanvas.Background = null;
             drawCanvas.ClearSelection();
             MainMap.CaptureMouse();

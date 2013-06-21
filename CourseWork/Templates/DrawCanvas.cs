@@ -16,9 +16,9 @@ namespace CourseWork.Templates
     {
         public DrawCanvas()
         {
-            this.PreviewMouseLeftButtonDown += CanvasPreviewMouseLeftButtonDown;
-            this.PreviewMouseMove += CanvasPreviewMouseMove;
-            this.PreviewMouseLeftButtonUp += CanvasPreviewMouseLeftButtonUp;
+            PreviewMouseLeftButtonDown += CanvasPreviewMouseLeftButtonDown;
+            PreviewMouseMove += CanvasPreviewMouseMove;
+            PreviewMouseLeftButtonUp += CanvasPreviewMouseLeftButtonUp;
             DiagramItemManager.SetInstance(this);
         }
 
@@ -275,10 +275,10 @@ namespace CourseWork.Templates
         /// <summary>
         /// Добавление элемента на Canvas
         /// </summary>
-        /// <param name="id">0 устр-во; 1 - вх. буффер; 2 - связь</param>
+        /// <param name="id">0 устр-во; 1 - вх. буффер; 2 - связь; 3 - группа</param>
         public void StartAddNewElement(int id)
         {
-            foreach (var result in this.Children.OfType<ConnectionArrow>())
+            foreach (var result in Children.OfType<ConnectionArrow>())
             {
                 result.IsHitTestVisible = false;
             }
@@ -302,30 +302,6 @@ namespace CourseWork.Templates
             _addNewElement = false;
             this.Children.Remove(_line);
             Mouse.SetCursor(Cursors.Arrow);
-        }
-
-        /// <summary>
-        /// Проверка на порог расстояния между элементами
-        /// </summary>
-        public void CheckDistance()
-        {
-            const int replDistance = 25;
-            DiagramItemManager.Instance.Items.ForEach(x => x.Visibility = Visibility.Visible);
-            for (int i = 0; i < DiagramItemManager.Instance.Items.Count - 1; i++)
-            {
-                for (int j = i + 1; j < DiagramItemManager.Instance.Items.Count; j++)
-                {
-                    var d1 = DiagramItemManager.Instance.Items[i];
-                    var d2 = DiagramItemManager.Instance.Items[j];
-                    var distance = MathHelper.Distance(d1.CenterPoint, d2.CenterPoint);
-                    if (distance < replDistance)
-                    {
-                        // TODO: заменять одним объектом
-                        d1.Visibility = Visibility.Hidden;
-                        MessageBox.Show(distance.ToString());
-                    }
-                }
-            }
         }
     }
 }

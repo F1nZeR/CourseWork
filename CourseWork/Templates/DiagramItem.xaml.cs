@@ -15,13 +15,13 @@ namespace CourseWork.Templates
     {
         BufferIn,
         BufferOut,
-        Device
+        Device,
+        Group
     }
 
     public partial class DiagramItem : UserControl
     {
         public PointLatLng PositionLatLng { get; set; }
-        private int _oldZIndex;
 
         public DiagramItemType DiagramItemType { get; private set; }
 
@@ -89,15 +89,14 @@ namespace CourseWork.Templates
         private static int _currentId = 0;
         public int Id { get; private set; }
 
-        public DiagramItem(string name, DiagramItemType type, double x = 0, double y = 0)
+        public DiagramItem(string name, DiagramItemType type)
         {
             InitializeComponent();
             Id = _currentId++;
             this.DataContext = this;
             ConnectionArrows = new List<ConnectionArrow>();
 
-
-            labelName.Content = name;
+            labelName.Content = name; 
             DiagramItemType = type;
             switch (type)
             {
@@ -110,12 +109,18 @@ namespace CourseWork.Templates
                 case DiagramItemType.BufferOut:
                     imgNavigate.Source = new BitmapImage(new Uri("../Images/Setting.png", UriKind.RelativeOrAbsolute));
                     break;
+                case DiagramItemType.Group:
+                    imgNavigate.Source = new BitmapImage(new Uri("../Images/Group.png", UriKind.RelativeOrAbsolute));
+                    break;
             }
+        }
 
+        public DiagramItem(string name, DiagramItemType type, double x = 0, double y = 0) : this(name, type)
+        {
             Move(x, y);
         }
 
-        private void UpdateConnectionArrows()
+        protected void UpdateConnectionArrows()
         {
             foreach (var connectionArrow in ConnectionArrows)
             {
@@ -124,11 +129,11 @@ namespace CourseWork.Templates
         }
 
         /// <summary>
-        /// Переместить элемент с привязкой к левому верхнему углу
+        /// Переместить элемент с привязкой к центру
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        public void Move(double x, double y)
+        public virtual void Move(double x, double y)
         {
             CenterPoint = new Point(x, y);
             UpdateConnectionArrows();
@@ -137,7 +142,7 @@ namespace CourseWork.Templates
         public void AddDragEffect()
         {
             this.Effect = new DropShadowEffect();
-            _oldZIndex = Canvas.GetZIndex(this);
+            Canvas.GetZIndex(this);
             Canvas.SetZIndex(this, 100);
         }
 

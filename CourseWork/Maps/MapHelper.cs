@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using CourseWork.Manager;
 using CourseWork.Templates;
+using CourseWork.Utilities.Helpers;
 using GMap.NET;
 using GMap.NET.WindowsPresentation;
 
@@ -94,6 +96,77 @@ namespace CourseWork.Maps
             }
 
             ReDrawElements();
+        }
+
+        /// <summary>
+        /// Проверка на порог расстояния между элементами
+        /// </summary>
+        public void CheckDistance()
+        {
+            const int replDistance = 35;
+            _lookableItems =
+                DiagramItemManager.Instance.Items.Where(x => x.DiagramItemType != DiagramItemType.Group).ToList();
+
+            _distMatrix = new int[_lookableItems.Count, _lookableItems.Count];
+            _chMatrix = new int[_lookableItems.Count, _lookableItems.Count];
+            for (int i = 0; i < _lookableItems.Count - 1; i++)
+            {
+                for (int j = i + 1; j < _lookableItems.Count; j++)
+                {
+                    var distance = MathHelper.Distance(_lookableItems[i].CenterPoint, _lookableItems[j].CenterPoint);
+                    _distMatrix[i, j] = distance < replDistance ? 1 : 0;
+                }
+            }
+
+            for (int i = 0; i < _lookableItems.Count; i++)
+            {
+                var currentGroup = new List<DiagramItem>();
+                DFS(i, currentGroup);
+
+                // текущую группу необходимо сгруппировать
+                if (currentGroup.Count > 1)
+                {
+                    // средняя точка всей группы
+                    var centerPoint = new Point(currentGroup.Sum(x => x.PositionLatLng.Lat)/currentGroup.Count,
+                                                currentGroup.Sum(x => x.PositionLatLng.Lng)/currentGroup.Count);
+                    var group =
+                        (GroupDevices) DiagramItemManager.Instance.AddNewItem(DiagramItemType.Group, new Point());
+                    group.PositionLatLng = new PointLatLng(centerPoint.X, centerPoint.Y);
+                    UpdateScreenCoords(group);
+
+                    currentGroup.ForEach(@group.Add);
+                    group.Compose();
+                }
+            }
+
+
+            //DiagramItemManager.Instance.GroupDeviceses.ForEach(group => group.UpdateCurrentView(_map.Zoom));
+        }
+
+        private int[,] _distMatrix, _chMatrix;
+        private List<DiagramItem> _lookableItems;
+        /// <summary>
+        /// Просмотр в глубину матрицы весов расстояний
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="currentGroup"></param>
+        private void DFS(int i, List<DiagramItem> currentGroup)
+        {
+            for (int j = 0; j < _distMatrix.GetLength(0); j++)
+            {
+                if (_chMatrix[i, j] == 1) continue;
+
+                _chMatrix[i, j] = 1;
+                _chMatrix[j, i] = 1;
+
+                if (_distMatrix[i, j] == 1)
+                {
+                    if (!currentGroup.Contains(_lookableItems[i])) currentGroup.Add(_lookableItems[i]);
+                    if (!currentGroup.Contains(_lookableItems[j])) currentGroup.Add(_lookableItems[j]);
+
+                    DFS(j, currentGroup);
+                }
+            }
         }
     }
 }

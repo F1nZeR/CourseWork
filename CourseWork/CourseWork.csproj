@@ -75,6 +75,7 @@
     <Compile Include="Templates\DrawControl.xaml.cs">
       <DependentUpon>DrawControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Templates\GroupDevices.cs" />
     <Compile Include="Utilities\Helpers\MathHelper.cs" />
     <Compile Include="Utilities\Helpers\VisualHelper.cs" />
     <Compile Include="Utilities\Helpers\MatrixHelper.cs" />
@@ -137,6 +138,9 @@
   <ItemGroup>
     <Resource Include="Images\Persist.png" />
     <Resource Include="Images\Setting.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Group.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
