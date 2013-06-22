@@ -33,6 +33,10 @@ namespace CourseWork.Maps
         private MapHelper(GMapControl map)
         {
             _map = map;
+            map.Loaded += (o, args) => ReDrawElements();
+            map.SizeChanged += (o, args) => ReDrawElements();
+            map.OnMapZoomChanged += ReDrawElements;
+            map.OnMapDrag += ReDrawElements;
         }
 
         /// <summary>
@@ -65,7 +69,6 @@ namespace CourseWork.Maps
             var heightLat = lat - DiagramItemManager.Instance.Items.Min((x => x.PositionLatLng.Lat));
             var widthLng = DiagramItemManager.Instance.Items.Max(x => x.PositionLatLng.Lng) - lng;
             _map.SetZoomToFitRect(new RectLatLng(lat, lng, widthLng, heightLat));
-            ReDrawElements();
         }
 
         /// <summary>
@@ -86,7 +89,6 @@ namespace CourseWork.Maps
         /// <param name="delta">размер приближения</param>
         public void Zoom(int delta)
         {
-            _map.Zoom += delta;
 
             // приближаем - двигаем к курсору; отодвигаем - оставляем на месте
             if (delta > 0)
@@ -94,8 +96,7 @@ namespace CourseWork.Maps
                 _map.Position = _map.FromLocalToLatLng(Convert.ToInt32(Mouse.GetPosition(_map).X),
                                                          Convert.ToInt32(Mouse.GetPosition(_map).Y));
             }
-
-            ReDrawElements();
+            _map.Zoom += delta;
         }
 
         /// <summary>
@@ -103,7 +104,7 @@ namespace CourseWork.Maps
         /// </summary>
         public void CheckDistance()
         {
-            const int replDistance = 35;
+            const int replDistance = 40;
             _lookableItems =
                 DiagramItemManager.Instance.Items.Where(x => x.DiagramItemType != DiagramItemType.Group).ToList();
 
@@ -127,10 +128,10 @@ namespace CourseWork.Maps
                 if (currentGroup.Count > 1)
                 {
                     // средняя точка всей группы
-                    var centerPoint = new Point(currentGroup.Sum(x => x.PositionLatLng.Lat)/currentGroup.Count,
-                                                currentGroup.Sum(x => x.PositionLatLng.Lng)/currentGroup.Count);
+                    var centerPoint = new Point(currentGroup.Sum(x => x.PositionLatLng.Lat) / currentGroup.Count,
+                                                currentGroup.Sum(x => x.PositionLatLng.Lng) / currentGroup.Count);
                     var group =
-                        (GroupDevices) DiagramItemManager.Instance.AddNewItem(DiagramItemType.Group, new Point());
+                        (GroupDevices)DiagramItemManager.Instance.AddNewItem(DiagramItemType.Group, new Point());
                     group.PositionLatLng = new PointLatLng(centerPoint.X, centerPoint.Y);
                     UpdateScreenCoords(group);
 
@@ -139,8 +140,7 @@ namespace CourseWork.Maps
                 }
             }
 
-
-            //DiagramItemManager.Instance.GroupDeviceses.ForEach(group => group.UpdateCurrentView(_map.Zoom));
+            UpdateGroupsConnections();
         }
 
         private int[,] _distMatrix, _chMatrix;
@@ -166,6 +166,59 @@ namespace CourseWork.Maps
 
                     DFS(j, currentGroup);
                 }
+            }
+        }
+
+        private void UpdateGroupsConnections()
+        {
+            var tuples = new List<Tuple<DiagramItem, DiagramItem>>();
+            foreach (var group in DiagramItemManager.Instance.GroupDeviceses)
+            {
+                foreach (var diagramItem in group.GetItems())
+                {
+                    foreach (var connectionArrow in diagramItem.ConnectionArrows)
+                    {
+                        // связь не внутри одной группы
+                        if (group.GetItems().Contains(connectionArrow.TargetItem) &&
+                            group.GetItems().Contains(connectionArrow.FromItem)) continue;
+
+                        // связь соединяет блоки в группах
+                        if (connectionArrow.TargetItem.Visibility == Visibility.Hidden &&
+                            connectionArrow.FromItem.Visibility == Visibility.Hidden)
+                        {
+                            tuples.Add(new Tuple<DiagramItem, DiagramItem>(
+                                           DiagramItemManager.Instance.GroupDeviceses.Single(
+                                               x => x.GetItems().Contains(connectionArrow.FromItem)),
+                                           DiagramItemManager.Instance.GroupDeviceses.Single(
+                                               x => x.GetItems().Contains(connectionArrow.TargetItem))));
+                        }
+                        else
+                        {
+                            // связь между группой и отдельным блоком
+                            var fGroup =
+                                DiagramItemManager.Instance.GroupDeviceses.SingleOrDefault(
+                                    x => x.GetItems().Contains(connectionArrow.FromItem));
+                            var item = connectionArrow.TargetItem;
+                            if (fGroup == null)
+                            {
+                                fGroup = DiagramItemManager.Instance.GroupDeviceses.SingleOrDefault(
+                                    x => x.GetItems().Contains(connectionArrow.TargetItem));
+                                item = connectionArrow.FromItem;
+                                tuples.Add(new Tuple<DiagramItem, DiagramItem>(item, fGroup));
+                            }
+                            else
+                            {
+                                tuples.Add(new Tuple<DiagramItem, DiagramItem>(fGroup, item));
+                            }
+                        }
+                    }
+                }
+            }
+
+            var result = tuples.Distinct();
+            foreach (var tuple in result)
+            {
+                DiagramItemManager.Instance.AddNewLink(tuple.Item1, tuple.Item2, 0, true);
             }
         }
     }

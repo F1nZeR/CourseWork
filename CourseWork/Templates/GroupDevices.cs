@@ -1,15 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Input;
+using GMap.NET;
 
 namespace CourseWork.Templates
 {
     public class GroupDevices : DiagramItem
     {
+        private PointLatLng _pointLatLng;
+        public override PointLatLng PositionLatLng
+        {
+            get { return _pointLatLng; }
+            set
+            {
+                _pointLatLng = value;
+                _items.ForEach(x => Maps.MapHelper.Instance.UpdateLatLngPoses(x));
+            }
+        }
+
+
         public double ComposeSize { get; set; }
         private readonly List<DiagramItem> _items;
 
@@ -26,34 +34,26 @@ namespace CourseWork.Templates
             foreach (var diagramItem in _items)
             {
                 diagramItem.Visibility = Visibility.Hidden;
-                foreach (var connectionArrow in ConnectionArrows)
+                foreach (var connectionArrow in diagramItem.ConnectionArrows)
                 {
-                    if (connectionArrow.TargetItem.Visibility == Visibility.Hidden &&
-                        connectionArrow.FromItem.Visibility == Visibility.Hidden)
-                    {
-                        connectionArrow.Visibility = Visibility.Hidden;
-                    }
+                    connectionArrow.Visibility = Visibility.Hidden;
                 }
             }
         }
 
         public void Decompose()
         {
-            Visibility = Visibility.Hidden;
             foreach (var diagramItem in _items)
             {
                 diagramItem.Visibility = Visibility.Visible;
-                foreach (var connectionArrow in ConnectionArrows)
+                foreach (var connectionArrow in diagramItem.ConnectionArrows)
                 {
-                    if (connectionArrow.TargetItem.Visibility == Visibility.Visible &&
-                        connectionArrow.FromItem.Visibility == Visibility.Visible)
-                    {
-                        connectionArrow.Visibility = Visibility.Visible;
-                    }
+                    connectionArrow.Visibility = Visibility.Visible;
                 }
             }
 
-            _items.Clear();
+            //_items.Clear();
+            //ConnectionArrows.Clear();
         }
 
         /// <summary>
@@ -83,7 +83,9 @@ namespace CourseWork.Templates
             foreach (var diagramItem in _items)
             {
                 diagramItem.Move(diagramItem.CenterPoint.X + diffX, diagramItem.CenterPoint.Y + diffY);
+                diagramItem.UpdateConnectionArrows();
             }
+
             UpdateConnectionArrows();
         }
 
@@ -95,6 +97,11 @@ namespace CourseWork.Templates
         public void Remove(DiagramItem item)
         {
             _items.Remove(item);
+        }
+
+        public List<DiagramItem> GetItems()
+        {
+            return _items;
         }
     }
 }

@@ -21,7 +21,7 @@ namespace CourseWork.Templates
 
     public partial class DiagramItem : UserControl
     {
-        public PointLatLng PositionLatLng { get; set; }
+        public virtual PointLatLng PositionLatLng { get; set; }
 
         public DiagramItemType DiagramItemType { get; private set; }
 
@@ -120,7 +120,7 @@ namespace CourseWork.Templates
             Move(x, y);
         }
 
-        protected void UpdateConnectionArrows()
+        public void UpdateConnectionArrows()
         {
             foreach (var connectionArrow in ConnectionArrows)
             {

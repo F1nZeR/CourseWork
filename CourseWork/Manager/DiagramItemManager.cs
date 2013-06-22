@@ -177,8 +177,15 @@ namespace CourseWork.Manager
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="chance"></param>
-        public void AddNewLink(DiagramItem from, DiagramItem to, double chance)
+        /// <param name="isGroups">связь между группами</param>
+        public void AddNewLink(DiagramItem from, DiagramItem to, double chance, bool isGroups = false)
         {
+            if (isGroups)
+            {
+                _canvas.Children.Add(new ConnectionArrow(from, to, chance));
+                return;
+            }
+
             if ((to.DiagramItemType == DiagramItemType.BufferIn) ||
                 (from.DiagramItemType == to.DiagramItemType && to.DiagramItemType != DiagramItemType.Device))
             {

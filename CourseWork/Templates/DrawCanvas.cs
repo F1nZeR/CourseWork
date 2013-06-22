@@ -8,7 +8,6 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using CourseWork.Manager;
 using CourseWork.Maps;
-using CourseWork.Utilities.Helpers;
 
 namespace CourseWork.Templates
 {

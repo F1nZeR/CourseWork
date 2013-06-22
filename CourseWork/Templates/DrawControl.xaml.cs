@@ -50,8 +50,6 @@ namespace CourseWork.Templates
             MapHelper.SetInstance(MainMap);
             DiagramItemManager.Instance.LoadDefaultElements();
             MapHelper.Instance.FitMapToScreen();
-            MainMap.SizeChanged += (o, args) => MapHelper.Instance.ReDrawElements();
-            MainMap.Loaded += (o, args) => MapHelper.Instance.ReDrawElements();
 
             drawCanvas.DragSelectionBorder = dragSelectionBorder;
             drawCanvas.DragSelectionCanvas = dragSelectionCanvas;
@@ -76,13 +74,26 @@ namespace CourseWork.Templates
         private void OnPreviewMouseWheel(object sender, MouseWheelEventArgs mouseWheelEventArgs)
         {
             var delta = mouseWheelEventArgs.Delta > 0 ? 1 : -1;
-            MapHelper.Instance.Zoom(delta);
             foreach (var groupDevicese in DiagramItemManager.Instance.GroupDeviceses)
             {
+                foreach (var connectionArrow in groupDevicese.ConnectionArrows)
+                {
+                    drawCanvas.Children.Remove(connectionArrow);
+                }
                 groupDevicese.Decompose();
                 drawCanvas.Children.Remove(groupDevicese);
             }
+
+            foreach (var diagramItem in DiagramItemManager.Instance.Items)
+            {
+                diagramItem.ConnectionArrows.RemoveAll(x =>
+                                                       x.TargetItem.DiagramItemType == DiagramItemType.Group ||
+                                                       x.FromItem.DiagramItemType == DiagramItemType.Group);
+            }
+
+            MapHelper.Instance.Zoom(delta);
             MapHelper.Instance.CheckDistance();
+            MapHelper.Instance.ReDrawElements();
         }
 
         private void OnPreviewMouseRightButtonUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
