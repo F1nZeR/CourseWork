@@ -30,7 +30,7 @@
             <Expander Header="Добавить элемент" Width="128">
                 <StackPanel>
                     <Button Content="Устройство" Margin="2" Click="ButtonClickAddDevice" />
-                    <Button Content="Входной буффер" Margin="2" Click="ButtonClickAddInBuffer" />
+                    <Button Content="Входной буфер" Margin="2" Click="ButtonClickAddInBuffer" />
                     <Separator />
                     <Button Content="Связь" Margin="2" Click="ButtonClickAddLink"/>
                 </StackPanel>
@@ -44,8 +44,11 @@
                               Click="CheckBoxClickShowOutBuffer"/>
                     <CheckBox Name="cbShowRoute" IsChecked="True" Content="Маршрутизация" Margin="2" 
                               Click="CheckBoxClickShowRouting"/>
-                    <CheckBox IsChecked="{Binding ElementName=cbShowRoute, Path=IsChecked, Mode=OneWay}" Content="Замыкание" Margin="2" 
-                              Click="CheckBoxClickShowLoopback"/>
+                    <CheckBox IsChecked="{Binding ElementName=cbShowRoute, Path=IsChecked, Mode=OneWay}" 
+                              Content="Замыкание" Margin="2" Click="CheckBoxClickShowLoopback"/>
+                    <Separator/>
+                    <CheckBox Name="cbAutoGrouping" IsChecked="{Binding Source={StaticResource odpSettings}, Path=Default.AutoGrouping}" 
+                              Content="Автогруппировка" Margin="2" Click="CbAutoGroupingClicked" />
                 </StackPanel>
             </Expander>
 

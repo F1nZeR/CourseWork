@@ -42,7 +42,7 @@ namespace CourseWork.Templates
         private void BtnAutoSizeOnClick(object sender, RoutedEventArgs routedEventArgs)
         {
             MapHelper.Instance.FitMapToScreen();
-            MapHelper.Instance.CheckDistance();
+            MapHelper.Instance.GroupElements();
         }
 
         private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
@@ -74,25 +74,9 @@ namespace CourseWork.Templates
         private void OnPreviewMouseWheel(object sender, MouseWheelEventArgs mouseWheelEventArgs)
         {
             var delta = mouseWheelEventArgs.Delta > 0 ? 1 : -1;
-            foreach (var groupDevicese in DiagramItemManager.Instance.GroupDeviceses)
-            {
-                foreach (var connectionArrow in groupDevicese.ConnectionArrows)
-                {
-                    drawCanvas.Children.Remove(connectionArrow);
-                }
-                groupDevicese.Decompose();
-                drawCanvas.Children.Remove(groupDevicese);
-            }
-
-            foreach (var diagramItem in DiagramItemManager.Instance.Items)
-            {
-                diagramItem.ConnectionArrows.RemoveAll(x =>
-                                                       x.TargetItem.DiagramItemType == DiagramItemType.Group ||
-                                                       x.FromItem.DiagramItemType == DiagramItemType.Group);
-            }
 
             MapHelper.Instance.Zoom(delta);
-            MapHelper.Instance.CheckDistance();
+            MapHelper.Instance.GroupElements();
             MapHelper.Instance.ReDrawElements();
         }
 
@@ -105,7 +89,15 @@ namespace CourseWork.Templates
         private void OnPreviewMouseRightButtonDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
             // обработка события MouseRightDown на элементах
-            if (DiagramItemManager.Instance.Items.Any(x => x.IsMouseOver)) return;
+            if (DiagramItemManager.Instance.Items.Any(x => x.IsMouseOver))
+            {
+                if (!DiagramItemManager.Instance.SelectedItems.Contains(
+                    DiagramItemManager.Instance.Items.Single(x => x.IsMouseOver)))
+                {
+                    drawCanvas.ClearSelection();
+                }
+                return;
+            }
 
             // иначе передвижение карты
             drawCanvas.Background = null;
@@ -281,6 +273,12 @@ namespace CourseWork.Templates
             {
                 item.ViewType = Settings.Default.NormalArrowType;
             }
+        }
+
+        private void CbAutoGroupingClicked(object sender, RoutedEventArgs e)
+        {
+            MapHelper.Instance.RemovePreviousGroups();
+            MapHelper.Instance.GroupElements();
         }
     }
 }

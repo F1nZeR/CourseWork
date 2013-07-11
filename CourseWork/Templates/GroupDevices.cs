@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using GMap.NET;
 
@@ -31,10 +32,15 @@ namespace CourseWork.Templates
         public void Compose()
         {
             Visibility = Visibility.Visible;
+
             foreach (var diagramItem in _items)
             {
+                // если спрятан в настройках - пропускаем
+                if (diagramItem.Visibility == Visibility.Collapsed) continue;
+                
                 diagramItem.Visibility = Visibility.Hidden;
-                foreach (var connectionArrow in diagramItem.ConnectionArrows)
+
+                foreach (var connectionArrow in diagramItem.ConnectionArrows.Where(x => x.Visibility == Visibility.Visible))
                 {
                     connectionArrow.Visibility = Visibility.Hidden;
                 }
@@ -43,17 +49,19 @@ namespace CourseWork.Templates
 
         public void Decompose()
         {
+            Visibility = Visibility.Hidden;
+
             foreach (var diagramItem in _items)
             {
+                // если спрятан в настройках - пропускаем
+                if (diagramItem.Visibility == Visibility.Collapsed) continue;
+
                 diagramItem.Visibility = Visibility.Visible;
-                foreach (var connectionArrow in diagramItem.ConnectionArrows)
+                foreach (var connectionArrow in diagramItem.ConnectionArrows.Where(x => x.Visibility == Visibility.Hidden))
                 {
                     connectionArrow.Visibility = Visibility.Visible;
                 }
             }
-
-            //_items.Clear();
-            //ConnectionArrows.Clear();
         }
 
         /// <summary>
@@ -62,7 +70,12 @@ namespace CourseWork.Templates
         /// <param name="zoom">размер приближения</param>
         public void UpdateCurrentView(double zoom)
         {
-            if (_items.Count == 0) return;
+            // пустая группа - не показывать и ничего не делать
+            if (_items.Count == 0)
+            {
+                Visibility = Visibility.Hidden;
+                return;
+            }
 
             if (zoom <= ComposeSize)
             {
@@ -71,6 +84,10 @@ namespace CourseWork.Templates
             else
             {
                 Decompose();
+                foreach (var groupDevices in _items.OfType<GroupDevices>())
+                {
+                    groupDevices.UpdateCurrentView(zoom);
+                }
             }
         }
 
@@ -99,9 +116,27 @@ namespace CourseWork.Templates
             _items.Remove(item);
         }
 
+        /// <summary>
+        /// Получить элементы группы
+        /// </summary>
+        /// <returns></returns>
         public List<DiagramItem> GetItems()
         {
             return _items;
+        }
+
+        /// <summary>
+        /// Разместить элемент группы по центру (относительно сгруппированных элементов)
+        /// </summary>
+        public void MakeCentered()
+        {
+            var centerPoint = new Point(_items.Sum(x => x.PositionLatLng.Lat)/_items.Count,
+                                        _items.Sum(x => x.PositionLatLng.Lng)/_items.Count);
+            var items = _items.ToList();
+            _items.Clear();
+            PositionLatLng = new PointLatLng(centerPoint.X, centerPoint.Y);
+            Maps.MapHelper.Instance.UpdateScreenCoords(this);
+            _items.AddRange(items);
         }
     }
 }

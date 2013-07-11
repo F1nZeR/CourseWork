@@ -7,6 +7,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
+using CourseWork.Manager;
+using CourseWork.Properties;
 using GMap.NET;
 
 namespace CourseWork.Templates
@@ -80,23 +82,25 @@ namespace CourseWork.Templates
 
         public double SumChanceOut
         {
-            get
-            {
-                return ConnectionArrowsOut.Sum(x => x.Chance);
-            }
+            get { return ConnectionArrowsOut.Sum(x => x.Chance); }
         }
 
         private static int _currentId = 0;
         public int Id { get; private set; }
+        public String LabelName
+        {
+            get { return labelName.Content.ToString(); }
+            set { labelName.Content = value; }
+        }
 
         public DiagramItem(string name, DiagramItemType type)
         {
             InitializeComponent();
             Id = _currentId++;
-            this.DataContext = this;
+            DataContext = this;
             ConnectionArrows = new List<ConnectionArrow>();
+            LabelName = name;
 
-            labelName.Content = name; 
             DiagramItemType = type;
             switch (type)
             {
@@ -113,6 +117,44 @@ namespace CourseWork.Templates
                     imgNavigate.Source = new BitmapImage(new Uri("../Images/Group.png", UriKind.RelativeOrAbsolute));
                     break;
             }
+
+            PreviewMouseRightButtonDown += OnPreviewMouseRightButtonDown;
+        }
+
+        private void OnPreviewMouseRightButtonDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
+        {
+            IsSelected = true;
+            miAddToNewGroup.IsEnabled = miAddToExistingGroup.IsEnabled = !Settings.Default.AutoGrouping;
+
+            // есть, в какую группу добавить элемент
+            if (DiagramItemManager.Instance.GroupDeviceses.Count > 0)
+            {
+                miAddToExistingGroup.IsEnabled = true;
+                miAddToExistingGroup.Items.Clear();
+
+                foreach (var groupDevicese in DiagramItemManager.Instance.GroupDeviceses)
+                {
+                    var menuItem = new MenuItem
+                    {
+                        Header = groupDevicese.LabelName
+                    };
+                    menuItem.Click += MenuItemAddToGroupOnClick;
+
+                    miAddToExistingGroup.Items.Add(menuItem);
+                }
+            }
+            else
+            {
+                miAddToExistingGroup.IsEnabled = false;
+                miAddToExistingGroup.Items.Clear();
+            }
+        }
+
+        private void MenuItemAddToGroupOnClick(object sender, RoutedEventArgs routedEventArgs)
+        {
+            var index = miAddToExistingGroup.Items.IndexOf(sender);
+            var group = DiagramItemManager.Instance.GroupDeviceses[index];
+            AddSelectedItemsToGroup(group);
         }
 
         public DiagramItem(string name, DiagramItemType type, double x = 0, double y = 0) : this(name, type)
@@ -141,16 +183,39 @@ namespace CourseWork.Templates
 
         public void AddDragEffect()
         {
-            this.Effect = new DropShadowEffect();
-            Canvas.GetZIndex(this);
-            Canvas.SetZIndex(this, 100);
+            Effect = new DropShadowEffect();
+            Panel.GetZIndex(this);
+            Panel.SetZIndex(this, 100);
         }
 
         public void RemoveDragEffect()
         {
-            this.Effect = null;
-            //Canvas.SetZIndex(this, _oldZIndex);
-            Canvas.SetZIndex(this, 0);
+            Effect = null;
+            Panel.SetZIndex(this, 0);
+        }
+
+        private void MiAddToNewGroupClick(object sender, RoutedEventArgs e)
+        {
+            var window = new Windows.NewGroupWindow {Owner = Application.Current.MainWindow};
+            window.ShowDialog();
+            var group = (GroupDevices) DiagramItemManager.Instance.AddNewItem(DiagramItemType.Group, new Point());
+            group.LabelName = window.Value;
+            group.ComposeSize = Maps.MapHelper.Instance.MapZoom;
+            AddSelectedItemsToGroup(group);
+        }
+
+        private void AddSelectedItemsToGroup(GroupDevices group)
+        {
+            foreach (var selectedItem in DiagramItemManager.Instance.SelectedItems)
+            {
+                var inExistingGroup =
+                    DiagramItemManager.Instance.GroupDeviceses.FirstOrDefault(x => x.GetItems().Contains(selectedItem));
+                if (inExistingGroup != null) inExistingGroup.Remove(selectedItem);
+                group.Add(selectedItem);
+            }
+
+            DiagramItemManager.Instance.SelectedItems.ForEach(x => x.IsSelected = false);
+            Maps.MapHelper.Instance.GroupElements();
         }
     }
 }

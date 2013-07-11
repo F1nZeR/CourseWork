@@ -191,7 +191,7 @@ namespace CourseWork.Templates
 
             ClearSelection();
 
-            foreach (var diagramItem in DiagramItemManager.Instance.Items)
+            foreach (var diagramItem in DiagramItemManager.Instance.Items.Where(item => item.Visibility == Visibility.Visible))
             {
                 var itemRect = new Rect(diagramItem.Position.X, diagramItem.Position.Y, diagramItem.Width, diagramItem.Height);
                 if (dragRect.Contains(itemRect))

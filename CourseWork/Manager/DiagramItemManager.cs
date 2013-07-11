@@ -115,7 +115,7 @@ namespace CourseWork.Manager
                     if (vector[vectIndex, i] > 0) AddNewLink(inBuffers[vectIndex - 1], dItem, vector[vectIndex, i]);
                 }
                 var chance = MatrixHelper.CalculateRowChance(matrix, i);
-                if (chance <= 1.0f)
+                if (chance < 1.0f)
                 {
                     AddNewLink(dItem, outBuffer, 1.0f - chance);
                 }
@@ -207,6 +207,17 @@ namespace CourseWork.Manager
         public void SaveAll()
         {
             Services.SaveToFile.Save();
+        }
+
+        public void Remove(DiagramItem item)
+        {
+            Items.Remove(item);
+            _canvas.Children.Remove(item);
+        }
+        public void Remove(ConnectionArrow arrow)
+        {
+            ConnectionArrows.Remove(arrow);
+            _canvas.Children.Remove(arrow);
         }
     }
 }

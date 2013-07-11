@@ -82,6 +82,9 @@
     <Compile Include="Windows\ChangeLinkWindow.xaml.cs">
       <DependentUpon>ChangeLinkWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\NewGroupWindow.xaml.cs">
+      <DependentUpon>NewGroupWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -103,6 +106,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\ChangeLinkWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\NewGroupWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

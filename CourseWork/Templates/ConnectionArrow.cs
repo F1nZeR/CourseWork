@@ -141,15 +141,20 @@ namespace CourseWork.Templates
             fromItem.ConnectionArrows.Add(this);
             toItem.ConnectionArrows.Add(this);
 
-            this.PreviewMouseLeftButtonDown += OnPreviewMouseLeftButtonDown;
-            this.MouseEnter += OnMouseEnter;
-            this.MouseLeave += (sender, args) => SetDeafultStyle();
+            PreviewMouseLeftButtonDown += OnPreviewMouseLeftButtonDown;
+            MouseEnter += OnMouseEnter;
+            MouseLeave += OnMouseLeave;
+        }
+
+        private void OnMouseLeave(object sender, MouseEventArgs e)
+        {
+            SetDeafultStyle();
         }
 
         private void OnMouseEnter(object sender, MouseEventArgs e)
         {
             SetColoredStyle();
-            this.ToolTip = string.Format("{0}%", Chance * 100);
+            ToolTip = string.Format("{0}%", Chance * 100);
         }
 
         /// <summary>
@@ -182,12 +187,16 @@ namespace CourseWork.Templates
                                     {
                                         Top = e.GetPosition(this).Y,
                                         Left = e.GetPosition(this).X,
-                                        Title = (this.Chance * 100) + "%"
+                                        Title =
+                                            string.Format("{0} -> {1} ({2}%)", FromItem.LabelName, TargetItem.LabelName,
+                                                          Chance*100)
                                     };
 
+                MouseLeave -= OnMouseLeave;
                 SetColoredStyle();
                 wndChange.ShowDialog();
                 SetDeafultStyle();
+                MouseLeave += OnMouseLeave;
 
                 var chance = wndChange.Chance;
                 if (chance == 0) return;
