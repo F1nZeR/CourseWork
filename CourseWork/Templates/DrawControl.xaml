@@ -10,24 +10,27 @@
     <UserControl.Resources>
         <ObjectDataProvider x:Key="odpSettings" ObjectType="{x:Type Properties:Settings}" />
     </UserControl.Resources>
-    
-    <Grid>
-        <WindowsPresentation:GMapControl x:Name="MainMap" Zoom="13" MaxZoom="24" MinZoom="1" />
-        <Templates:DrawCanvas x:Name="drawCanvas" Background="Transparent"/>
 
-        <Canvas x:Name="dragSelectionCanvas" Visibility="Collapsed">
-            <Border 
-                x:Name="dragSelectionBorder"
+    <Grid>
+        <Grid Margin="149,0,0,0">
+            <WindowsPresentation:GMapControl x:Name="MainMap" MaxZoom="24" MinZoom="0" />
+            <Templates:DrawCanvas x:Name="DrawCanvas" Background="Transparent"/>
+
+            <Canvas x:Name="DragSelectionCanvas" Visibility="Collapsed">
+                <Border 
+                x:Name="DragSelectionBorder"
                 BorderBrush="Blue"
                 BorderThickness="1"
                 Background="LightBlue"
                 CornerRadius="1"
                 Opacity="0.5"
                 />
-        </Canvas>
+            </Canvas>
+        </Grid>
 
-        <WrapPanel>
-            <Expander Header="Добавить элемент" Width="128">
+
+        <StackPanel Background="WhiteSmoke" HorizontalAlignment="Left" Width="144">
+            <Expander Header="Добавить элемент" >
                 <StackPanel>
                     <Button Content="Устройство" Margin="2" Click="ButtonClickAddDevice" />
                     <Button Content="Входной буфер" Margin="2" Click="ButtonClickAddInBuffer" />
@@ -38,16 +41,16 @@
 
             <Expander Header="Отображение">
                 <StackPanel>
-                    <CheckBox Name="cbShowInBuffer" IsChecked="True" Content="Вх. поток" Margin="2" 
+                    <CheckBox Name="CbShowInBuffer" IsChecked="True" Content="Вх. поток" Margin="2" 
                               Click="CheckBoxClickShowInBuffer"/>
-                    <CheckBox Name="cbShowOutBuffer" IsChecked="True" Content="Вых. поток" Margin="2" 
+                    <CheckBox Name="CbShowOutBuffer" IsChecked="True" Content="Вых. поток" Margin="2" 
                               Click="CheckBoxClickShowOutBuffer"/>
-                    <CheckBox Name="cbShowRoute" IsChecked="True" Content="Маршрутизация" Margin="2" 
+                    <CheckBox Name="CbShowRoute" IsChecked="True" Content="Маршрутизация" Margin="2" 
                               Click="CheckBoxClickShowRouting"/>
-                    <CheckBox IsChecked="{Binding ElementName=cbShowRoute, Path=IsChecked, Mode=OneWay}" 
+                    <CheckBox IsChecked="{Binding ElementName=CbShowRoute, Path=IsChecked, Mode=OneWay}" 
                               Content="Замыкание" Margin="2" Click="CheckBoxClickShowLoopback"/>
                     <Separator/>
-                    <CheckBox Name="cbAutoGrouping" IsChecked="{Binding Source={StaticResource odpSettings}, Path=Default.AutoGrouping}" 
+                    <CheckBox Name="CbAutoGrouping" IsChecked="{Binding Source={StaticResource odpSettings}, Path=Default.AutoGrouping}" 
                               Content="Автогруппировка" Margin="2" Click="CbAutoGroupingClicked" />
                 </StackPanel>
             </Expander>
@@ -70,19 +73,19 @@
                     </ComboBox>
                 </StackPanel>
             </Expander>
-            
+
             <Expander Header="Карта">
                 <StackPanel>
                     <Label Content="Провайдер" />
-                    <ComboBox FontSize="12" Name="comboBoxMapType" Height="25.04" VerticalAlignment="Top">
+                    <ComboBox FontSize="12" Name="ComboBoxMapType" Height="25.04" VerticalAlignment="Top">
                         <ComboBox.SelectedItem>
                             <Binding Path="MapProvider" ElementName="MainMap" />
                         </ComboBox.SelectedItem>
                     </ComboBox>
                     <Separator />
-                    <Button Height="22" Content="Авторазмер" Name="btnAutoSize" />
+                    <Button Height="22" Content="Авторазмер" Name="BtnAutoSize" />
                 </StackPanel>
             </Expander>
-        </WrapPanel>
+        </StackPanel>
     </Grid>
 </UserControl>

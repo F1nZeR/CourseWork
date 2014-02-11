@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using CourseWork.Manager;
 using CourseWork.Maps;
+using CourseWork.Maps.ImageProvider;
 using CourseWork.Properties;
 using GMap.NET;
 using GMap.NET.MapProviders;
@@ -24,7 +25,9 @@ namespace CourseWork.Templates
         {
             InitializeComponent();
 
-            MainMap.MapProvider = GMapProviders.GoogleMap;
+            MainMap.MapProvider = new GMapImageProvider("1.png");
+            MainMap.Loaded += (sender, args) => MainMap.ReloadMap();
+            MainMap.Zoom = 0;
             MainMap.MouseWheelZoomType = MouseWheelZoomType.MousePositionWithoutCenter;
             MainMap.Position = new PointLatLng(58, -37);
 
@@ -36,7 +39,7 @@ namespace CourseWork.Templates
             PreviewMouseWheel += OnPreviewMouseWheel;
             PreviewMouseMove += OnPreviewMouseMove;
 
-            btnAutoSize.Click += BtnAutoSizeOnClick;
+            BtnAutoSize.Click += BtnAutoSizeOnClick;
         }
 
         private void BtnAutoSizeOnClick(object sender, RoutedEventArgs routedEventArgs)
@@ -49,10 +52,10 @@ namespace CourseWork.Templates
         {
             MapHelper.SetInstance(MainMap);
             DiagramItemManager.Instance.LoadDefaultElements();
-            MapHelper.Instance.FitMapToScreen();
+            //MapHelper.Instance.FitMapToScreen();
 
-            drawCanvas.DragSelectionBorder = dragSelectionBorder;
-            drawCanvas.DragSelectionCanvas = dragSelectionCanvas;
+            DrawCanvas.DragSelectionBorder = DragSelectionBorder;
+            DrawCanvas.DragSelectionCanvas = DragSelectionCanvas;
 
             if (DiagramItemManager.Instance.Items.Any(x => Math.Abs(x.PositionLatLng.Lat) < 0.01))
             {
@@ -61,9 +64,9 @@ namespace CourseWork.Templates
             MapHelper.Instance.ReDrawElements();
 
             // заполнить комбобокс провайдеров
-            comboBoxMapType.ItemsSource = GMapProviders.List;
-            comboBoxMapType.DisplayMemberPath = "Name";
-            comboBoxMapType.SelectedItem = MainMap.MapProvider;
+            ComboBoxMapType.ItemsSource = GMapProviders.List;
+            ComboBoxMapType.DisplayMemberPath = "Name";
+            ComboBoxMapType.SelectedItem = MainMap.MapProvider;
         }
 
         private void OnPreviewMouseMove(object sender, MouseEventArgs mouseEventArgs)
@@ -82,7 +85,7 @@ namespace CourseWork.Templates
 
         private void OnPreviewMouseRightButtonUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
-            drawCanvas.Background = Brushes.Transparent;
+            DrawCanvas.Background = Brushes.Transparent;
             _isRightBtnPressed = false;
         }
 
@@ -94,14 +97,14 @@ namespace CourseWork.Templates
                 if (!DiagramItemManager.Instance.SelectedItems.Contains(
                     DiagramItemManager.Instance.Items.Single(x => x.IsMouseOver)))
                 {
-                    drawCanvas.ClearSelection();
+                    DrawCanvas.ClearSelection();
                 }
                 return;
             }
 
             // иначе передвижение карты
-            drawCanvas.Background = null;
-            drawCanvas.ClearSelection();
+            DrawCanvas.Background = null;
+            DrawCanvas.ClearSelection();
             MainMap.CaptureMouse();
             _isRightBtnPressed = true;
         }
@@ -110,23 +113,23 @@ namespace CourseWork.Templates
         {
             if (e.Key == Key.Escape)
             {
-                drawCanvas.ResetAddNew();
+                DrawCanvas.ResetAddNew();
             }
         }
 
         private void ButtonClickAddDevice(object sender, RoutedEventArgs e)
         {
-            drawCanvas.StartAddNewElement(0);
+            DrawCanvas.StartAddNewElement(0);
         }
 
         private void ButtonClickAddInBuffer(object sender, RoutedEventArgs e)
         {
-            drawCanvas.StartAddNewElement(1);
+            DrawCanvas.StartAddNewElement(1);
         }
 
         private void ButtonClickAddLink(object sender, RoutedEventArgs e)
         {
-            drawCanvas.StartAddNewElement(2);
+            DrawCanvas.StartAddNewElement(2);
         }
 
         private void CheckBoxClickShowInBuffer(object sender, RoutedEventArgs e)
@@ -134,7 +137,7 @@ namespace CourseWork.Templates
             var cb = (CheckBox) sender;
             if (cb.IsChecked == false)
             {
-                foreach (DiagramItem item in DiagramItemManager.Instance.Items.Where(
+                foreach (var item in DiagramItemManager.Instance.Items.Where(
                     x => x.DiagramItemType == DiagramItemType.BufferIn))
                 {
                     item.Visibility = Visibility.Collapsed;
@@ -200,14 +203,14 @@ namespace CourseWork.Templates
             else
             {
                 var items = new List<ConnectionArrow>();
-                if (cbShowInBuffer.IsChecked == false)
+                if (CbShowInBuffer.IsChecked == false)
                 {
                     items.AddRange(DiagramItemManager.Instance.ConnectionArrows.Where(
                         x => x.FromItem.DiagramItemType != DiagramItemType.BufferIn));
                 }
-                if (cbShowOutBuffer.IsChecked == false)
+                if (CbShowOutBuffer.IsChecked == false)
                 {
-                    if (cbShowInBuffer.IsChecked == false)
+                    if (CbShowInBuffer.IsChecked == false)
                     {
                         items.RemoveAll(x => x.TargetItem.DiagramItemType == DiagramItemType.BufferOut);
                     }
@@ -218,7 +221,7 @@ namespace CourseWork.Templates
                     }
                 }
 
-                if (cbShowInBuffer.IsChecked == true && cbShowOutBuffer.IsChecked == true)
+                if (CbShowInBuffer.IsChecked == true && CbShowOutBuffer.IsChecked == true)
                 {
                     items = DiagramItemManager.Instance.ConnectionArrows;
                 }

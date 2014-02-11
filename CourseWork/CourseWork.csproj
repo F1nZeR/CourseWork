@@ -44,6 +44,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -63,6 +64,8 @@
     </ApplicationDefinition>
     <Compile Include="Constants.cs" />
     <Compile Include="Manager\DiagramItemManager.cs" />
+    <Compile Include="Maps\ImageProvider\GMapImage.cs" />
+    <Compile Include="Maps\ImageProvider\GMapImageProvider.cs" />
     <Compile Include="Maps\MapHelper.cs" />
     <Compile Include="Services\Matrix.cs" />
     <Compile Include="Services\ReadFromFile.cs" />
@@ -76,6 +79,7 @@
       <DependentUpon>DrawControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Templates\GroupDevices.cs" />
+    <Compile Include="Utilities\Helpers\ImageHelper.cs" />
     <Compile Include="Utilities\Helpers\MathHelper.cs" />
     <Compile Include="Utilities\Helpers\VisualHelper.cs" />
     <Compile Include="Utilities\Helpers\MatrixHelper.cs" />
