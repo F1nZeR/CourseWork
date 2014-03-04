@@ -10,6 +10,7 @@ namespace CourseWork.Services
     {
         private static Matrix ReadFile(string path)
         {
+            path = Path.Combine(Directory.GetCurrentDirectory(), path);
             var resultMatrix = new Matrix(1, 1);
             FileStream fileStream;
 

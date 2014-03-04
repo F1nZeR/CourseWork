@@ -68,8 +68,9 @@
                     <ComboBox 
                         SelectedIndex="{Binding Source={StaticResource odpSettings}, Path=Default.NormalArrowType}"
                         SelectionChanged="ComboBoxNormalArrowViewSelectionChanged">
-                        <ComboBoxItem Content="Обычная" />
-                        <ComboBoxItem Content="Безье" />
+                        <ComboBoxItem Content="В центр" />
+                        <ComboBoxItem Content="Безье в центр" />
+                        <ComboBoxItem Content="К краю" />
                     </ComboBox>
                 </StackPanel>
             </Expander>

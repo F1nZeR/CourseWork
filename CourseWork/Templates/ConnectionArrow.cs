@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -277,6 +278,30 @@ namespace CourseWork.Templates
                         context.LineTo(pt2, true, true);
                         context.LineTo(pt4, true, true);
                         break;
+                        
+                    case 2: // к ближайшему краю
+                        var startPoint = GetBoundPoint(false);
+                        X1 = startPoint.X;
+                        Y1 = startPoint.Y;
+
+                        var endPoint = GetBoundPoint(true);
+                        X2 = endPoint.X;
+                        Y2 = endPoint.Y;
+
+                        pt3 = new Point(
+                            X2 + (HeadWidth * cost - HeadHeight * sint),
+                            Y2 + (HeadWidth * sint + HeadHeight * cost));
+
+                        pt4 = new Point(
+                            X2 + (HeadWidth * cost + HeadHeight * sint),
+                            Y2 - (HeadHeight * cost - HeadWidth * sint));
+
+                        context.BeginFigure(startPoint, true, false);
+                        context.LineTo(endPoint, true, false);
+                        context.LineTo(pt3, true, true);
+                        context.LineTo(endPoint, true, true);
+                        context.LineTo(pt4, true, true);
+                        break;
                 }
             }
             else if (ConnectionArrowType == ConnectionArrowType.Loopback)
@@ -308,7 +333,47 @@ namespace CourseWork.Templates
                 context.LineTo(pt2, true, true);
                 context.LineTo(pt4, true, true);
             }
+        }
 
+        private Point GetBoundPoint(bool isEndPoint)
+        {
+            DiagramItem fromItem, targetItem;
+            if (isEndPoint)
+            {
+                fromItem = FromItem;
+                targetItem = TargetItem;
+            }
+            else
+            {
+                fromItem = TargetItem;
+                targetItem = FromItem;
+            }
+            var direction = fromItem.CenterPoint - targetItem.CenterPoint;
+            double borderX, borderY;
+            if (direction.X < 0)
+            {
+                // таргет правее источника
+                borderX = targetItem.Position.X;
+            }
+            else
+            {
+                borderX = targetItem.Position.X + targetItem.ActualWidth;
+            }
+            var t1 = (borderX - targetItem.CenterPoint.X) / direction.X;
+
+            if (direction.Y < 0)
+            {
+                // таргет ниже источника
+                borderY = targetItem.Position.Y;
+            }
+            else
+            {
+                borderY = targetItem.Position.Y + targetItem.ActualHeight;
+            }
+            var t2 = (borderY - targetItem.CenterPoint.Y) / direction.Y;
+            var t = Math.Min(t1, t2);
+            var targetPoint = targetItem.CenterPoint + t * direction;
+            return targetPoint;
         }
     }
 }
