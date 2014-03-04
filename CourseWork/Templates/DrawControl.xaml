@@ -74,15 +74,8 @@
                 </StackPanel>
             </Expander>
 
-            <Expander Header="Карта">
+            <Expander Header="Позиционирование">
                 <StackPanel>
-                    <Label Content="Провайдер" />
-                    <ComboBox FontSize="12" Name="ComboBoxMapType" Height="25.04" VerticalAlignment="Top">
-                        <ComboBox.SelectedItem>
-                            <Binding Path="MapProvider" ElementName="MainMap" />
-                        </ComboBox.SelectedItem>
-                    </ComboBox>
-                    <Separator />
                     <Button Height="22" Content="Авторазмер" Name="BtnAutoSize" />
                 </StackPanel>
             </Expander>

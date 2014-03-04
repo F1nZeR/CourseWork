@@ -67,6 +67,23 @@ namespace CourseWork.Manager
             _canvas = canvas;
         }
 
+        public void ResetManager()
+        {
+            for (int i = 0; i < _canvas.Children.Count; i++)
+            {
+                var curItem = _canvas.Children[0];
+                var isDiagramItem = curItem is DiagramItem;
+                if (isDiagramItem)
+                {
+                    Remove((DiagramItem) curItem);
+                }
+                else
+                {
+                    Remove((ConnectionArrow) curItem);
+                }
+            }
+        }
+
         /// <summary>
         /// Загрузить элементы на форму
         /// </summary>

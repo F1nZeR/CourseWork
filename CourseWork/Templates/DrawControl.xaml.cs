@@ -24,13 +24,7 @@ namespace CourseWork.Templates
         public DrawControl()
         {
             InitializeComponent();
-
-            MainMap.MapProvider = new GMapImageProvider("1.png");
-            MainMap.Loaded += (sender, args) => MainMap.ReloadMap();
-            MainMap.Zoom = 0;
-            MainMap.MouseWheelZoomType = MouseWheelZoomType.MousePositionWithoutCenter;
-            MainMap.Position = new PointLatLng(58, -37);
-
+            
             PreviewKeyDown += OnPreviewKeyDown;
             Loaded += OnLoaded;
 
@@ -50,8 +44,12 @@ namespace CourseWork.Templates
 
         private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
+            MainMap.MapProvider = GMapProviders.EmptyProvider;
+            MainMap.Zoom = 0;
+            MainMap.MouseWheelZoomType = MouseWheelZoomType.MousePositionWithoutCenter;
+            MainMap.Position = new PointLatLng(58, -37);
+
             MapHelper.SetInstance(MainMap);
-            DiagramItemManager.Instance.LoadDefaultElements();
             //MapHelper.Instance.FitMapToScreen();
 
             DrawCanvas.DragSelectionBorder = DragSelectionBorder;
@@ -62,11 +60,6 @@ namespace CourseWork.Templates
                 DiagramItemManager.Instance.Items.ForEach(item => MapHelper.Instance.UpdateLatLngPoses(item));
             }
             MapHelper.Instance.ReDrawElements();
-
-            // заполнить комбобокс провайдеров
-            ComboBoxMapType.ItemsSource = GMapProviders.List;
-            ComboBoxMapType.DisplayMemberPath = "Name";
-            ComboBoxMapType.SelectedItem = MainMap.MapProvider;
         }
 
         private void OnPreviewMouseMove(object sender, MouseEventArgs mouseEventArgs)
