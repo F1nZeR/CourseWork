@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C2BBF701-4221-4267-8B0F-52DB2F628A2E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ODIS.Controls</RootNamespace>
+    <AssemblyName>CommonControls</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="frmInputMatrix.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmInputMatrix.Designer.cs">
+      <DependentUpon>frmInputMatrix.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MyNumericUpDown.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MyNumericUpDown.Designer.cs">
+      <DependentUpon>MyNumericUpDown.cs</DependentUpon>
+    </Compile>
+    <Compile Include="panelDistribution.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="panelDistribution.Designer.cs">
+      <DependentUpon>panelDistribution.cs</DependentUpon>
+    </Compile>
+    <Compile Include="panelOneParameter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="panelOneParameter.Designer.cs">
+      <DependentUpon>panelOneParameter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="panelProcess.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="panelProcess.Designer.cs">
+      <DependentUpon>panelProcess.cs</DependentUpon>
+    </Compile>
+    <Compile Include="panelStream.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="panelStream.Designer.cs">
+      <DependentUpon>panelStream.cs</DependentUpon>
+    </Compile>
+    <Compile Include="panelTwoParameters.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="panelTwoParameters.Designer.cs">
+      <DependentUpon>panelTwoParameters.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="frmInputMatrix.resx">
+      <DependentUpon>frmInputMatrix.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="panelDistribution.resx">
+      <DependentUpon>panelDistribution.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="panelOneParameter.resx">
+      <DependentUpon>panelOneParameter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="panelProcess.resx">
+      <DependentUpon>panelProcess.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="panelStream.resx">
+      <DependentUpon>panelStream.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="panelTwoParameters.resx">
+      <DependentUpon>panelTwoParameters.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AIM\AIM.csproj">
+      <Project>{34E8B9E8-DBA7-4CDE-9711-DD133C4CA63B}</Project>
+      <Name>AIM</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AMM\AMM.csproj">
+      <Project>{6F259CD8-B112-46E6-ADFD-80C4EC83AB2C}</Project>
+      <Name>AMM</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

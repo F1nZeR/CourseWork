@@ -1,0 +1,35 @@
+http://www.codeuml.com/?635080264984782969
+
+Actor User
+
+User -> DrawControl: OnMouseScroll(args)
+activate DrawControl
+    DrawControl -> DrawControl: delta = GetDelta(args)
+    DrawControl -> MapHelper: Zoom(delta)
+    activate MapHelper
+        MapHelper -> GMapControl: Zoom(delta)
+        activate GMapControl
+        return size
+        MapHelper -> MapHelper: CheckDistance()
+        activate MapHelper #FFBBBB
+        	MapHelper -> MapHelper: groups = DFS()  
+            MapHelper -> DiagramItemManager: CreateGroups(groups)
+            activate DiagramItemManager
+            return
+            MapHelper -> DiagramItemManager: GetGroupsDevices()  
+            activate DiagramItemManager
+            return groups
+            loop foreach group in groups
+   				MapHelper -> DiagramItem: UpdateView(size)
+               	activate DiagramItem
+                alt size <= ComposeSize
+                	DiagramItem -> DiagramItem: Compose()
+				else else
+                	DiagramItem -> DiagramItem: Decompose()
+				end
+                return
+			end
+        return
+        MapHelper -> MapHelper: UpdateGroupsConnections()
+    return
+return

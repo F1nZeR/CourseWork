@@ -1,0 +1,14 @@
+﻿Потом установить:   
+                case (int)DistributionType.Uniform: // Равномерный
+                    panel = new panelUniformDistributionParams();
+                    if (!FreeUsing) (panel as panelUniformDistributionParams).SetMinMinimum(0.00001);
+                    break;
+                case (int)DistributionType.Exponential: //Экспоненциальное распределение
+                    panel = new panelOneParameterDistributionParams();
+                    if (!FreeUsing) (panel as panelOneParameterDistributionParams).SetValue(2);
+
+Сделать корректную обработку аргументов в args[] для библиотек DistributionsLibrary
+
+RandomDistribution: сделать тип у GetParam object и реализовать GenericDiscreteDistribution.GetParam(...)
+
+Разобраться с путями к библиотекам
