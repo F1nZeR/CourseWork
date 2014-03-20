@@ -1,1 +1,0 @@
-copy "D:\Profiles\mois\MyDocs\Projects\2011\ODIS11\BaseAIMLibraries\BaseEventStreams\bin\Debug\*.dll" "D:\Profiles\mois\MyDocs\Projects\2011\ODIS11\ODIS11\bin\Debug"
