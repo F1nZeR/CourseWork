@@ -2,7 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
         xmlns:Templates="clr-namespace:CourseWork.Templates"
-        Title="СМО" Height="650" Width="825">
+        xmlns:infoPanel="clr-namespace:CourseWork.Templates.InfoPanel"
+        Title="Конструктор СеМО" Height="650" Width="825">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -19,16 +20,28 @@
                 <MenuItem Header="Карта" x:Name="MapTypeMenuItem" Click="MapTypeDataBoundItemClick"></MenuItem>
             </MenuItem>
         </Menu>
-        <Templates:DrawControl x:Name="DrawControl" Grid.Row="1"/>
 
-        <Canvas x:Name="DragSelectionCanvas" Visibility="Collapsed" Grid.Row="1">
-            <Border 
-                x:Name="DragSelectionBorder"
-                BorderBrush="Blue"
-                BorderThickness="1"
-                Background="LightBlue"
-                CornerRadius="1"
-                Opacity="0.5" />
-        </Canvas>
+        <TabControl Grid.Row="1" SelectionChanged="TabControlSelectionChanged">
+            <TabItem Header="Визуальное прдеставление" x:Name="TabVisual">
+                <Grid Background="#FFE5E5E5">
+                    <Templates:DrawControl x:Name="DrawControl" />
+                    <Canvas x:Name="DragSelectionCanvas" Visibility="Collapsed">
+                        <Border 
+                            x:Name="DragSelectionBorder"
+                            BorderBrush="Blue"
+                            BorderThickness="1"
+                            Background="LightBlue"
+                            CornerRadius="1"
+                            Opacity="0.5" />
+                    </Canvas>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Табличное представление" x:Name="TabTable">
+                <Grid Background="#FFE5E5E5">
+                    <infoPanel:InfoPanel x:Name="InfoPanelBlock" />
+                </Grid>
+            </TabItem>
+        </TabControl>
+
     </Grid>
 </Window>

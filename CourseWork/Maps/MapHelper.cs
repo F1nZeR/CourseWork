@@ -157,7 +157,7 @@ namespace CourseWork.Maps
                 if (currentGroup.Count > 1)
                 {
                     var group =
-                        (GroupDevices)DiagramItemManager.Instance.AddNewItem(DiagramItemType.Group, new Point());
+                        (GroupItem)DiagramItemManager.Instance.AddNewItem(DiagramItemType.Group, new Point());
                     currentGroup.ForEach(group.Add);
                     group.Compose();
                     group.MakeCentered();

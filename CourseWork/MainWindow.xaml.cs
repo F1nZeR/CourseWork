@@ -66,5 +66,16 @@ namespace CourseWork
             var obMenuItem = (MenuItem) e.OriginalSource;
             DrawControl.MainMap.MapProvider = (GMapProvider) obMenuItem.Header;
         }
+
+        private void TabControlSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.Source is TabControl)
+            {
+                if (TabTable.IsSelected)
+                {
+                    InfoPanelBlock.SyncTable();
+                }
+            }
+        }
     }
 }

@@ -20,7 +20,11 @@ namespace CourseWork.Services
             }
             catch (IOException exception)
             {
-                MessageBox.Show(exception.Message);
+                var res = MessageBox.Show(exception.Message + " Создать новый набор?", "Внимание!", MessageBoxButton.YesNo);
+                if (res == MessageBoxResult.Yes)
+                {
+                    return new Matrix(1, 1);
+                }
                 throw;
             }
 

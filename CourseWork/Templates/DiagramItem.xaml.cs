@@ -85,7 +85,7 @@ namespace CourseWork.Templates
             get { return ConnectionArrowsOut.Sum(x => x.Chance); }
         }
 
-        private static int _currentId = 0;
+        private static int _currentId;
         public int Id { get; private set; }
         public String LabelName
         {
@@ -102,21 +102,21 @@ namespace CourseWork.Templates
             LabelName = name;
 
             DiagramItemType = type;
-            switch (type)
-            {
-                case DiagramItemType.Device:
-                    imgNavigate.Source = new BitmapImage(new Uri("../Images/Persist.png", UriKind.RelativeOrAbsolute));
-                    break;
-                case DiagramItemType.BufferIn:
-                    imgNavigate.Source = new BitmapImage(new Uri("../Images/Setting.png", UriKind.RelativeOrAbsolute));
-                    break;
-                case DiagramItemType.BufferOut:
-                    imgNavigate.Source = new BitmapImage(new Uri("../Images/Setting.png", UriKind.RelativeOrAbsolute));
-                    break;
-                case DiagramItemType.Group:
-                    imgNavigate.Source = new BitmapImage(new Uri("../Images/Group.png", UriKind.RelativeOrAbsolute));
-                    break;
-            }
+            //switch (type)
+            //{
+            //    case DiagramItemType.Device:
+            //        imgNavigate.Source = new BitmapImage(new Uri("../Images/Persist.png", UriKind.RelativeOrAbsolute));
+            //        break;
+            //    case DiagramItemType.BufferIn:
+            //        imgNavigate.Source = new BitmapImage(new Uri("../Images/Setting.png", UriKind.RelativeOrAbsolute));
+            //        break;
+            //    case DiagramItemType.BufferOut:
+            //        imgNavigate.Source = new BitmapImage(new Uri("../Images/Setting.png", UriKind.RelativeOrAbsolute));
+            //        break;
+            //    case DiagramItemType.Group:
+            //        imgNavigate.Source = new BitmapImage(new Uri("../Images/Group.png", UriKind.RelativeOrAbsolute));
+            //        break;
+            //}
 
             PreviewMouseRightButtonDown += OnPreviewMouseRightButtonDown;
         }
@@ -198,13 +198,13 @@ namespace CourseWork.Templates
         {
             var window = new Windows.NewGroupWindow {Owner = Application.Current.MainWindow};
             window.ShowDialog();
-            var group = (GroupDevices) DiagramItemManager.Instance.AddNewItem(DiagramItemType.Group, new Point());
+            var group = (GroupItem) DiagramItemManager.Instance.AddNewItem(DiagramItemType.Group, new Point());
             group.LabelName = window.Value;
             group.ComposeSize = Maps.MapHelper.Instance.MapZoom;
             AddSelectedItemsToGroup(group);
         }
 
-        private void AddSelectedItemsToGroup(GroupDevices group)
+        private void AddSelectedItemsToGroup(GroupItem group)
         {
             foreach (var selectedItem in DiagramItemManager.Instance.SelectedItems)
             {

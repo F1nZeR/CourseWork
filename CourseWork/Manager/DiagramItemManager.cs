@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using CourseWork.Templates;
 using CourseWork.Utilities.Helpers;
 using GMap.NET;
+using GroupItem = CourseWork.Templates.GroupItem;
 
 namespace CourseWork.Manager
 {
@@ -40,9 +41,9 @@ namespace CourseWork.Manager
             }
         }
 
-        public List<GroupDevices> GroupDeviceses
+        public List<GroupItem> GroupDeviceses
         {
-            get { return _canvas.Children.OfType<GroupDevices>().OrderBy(x => x.Id).ToList(); }
+            get { return _canvas.Children.OfType<GroupItem>().OrderBy(x => x.Id).ToList(); }
         }
          
         public List<ConnectionArrow> ConnectionArrows
@@ -173,7 +174,7 @@ namespace CourseWork.Manager
                     break;
 
                 case DiagramItemType.Group:
-                    dItem = new GroupDevices("GROUP", type, pos.X - 30, pos.Y - 40);
+                    dItem = new GroupItem("GROUP", type, pos.X - 30, pos.Y - 40);
                     break;
 
                 default:

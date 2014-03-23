@@ -5,7 +5,7 @@ using GMap.NET;
 
 namespace CourseWork.Templates
 {
-    public class GroupDevices : DiagramItem
+    public class GroupItem : DiagramItem
     {
         private PointLatLng _pointLatLng;
         public override PointLatLng PositionLatLng
@@ -22,7 +22,7 @@ namespace CourseWork.Templates
         public double ComposeSize { get; set; }
         private readonly List<DiagramItem> _items;
 
-        public GroupDevices(string name, DiagramItemType type, double x, double y) : base(name, type)
+        public GroupItem(string name, DiagramItemType type, double x, double y) : base(name, type)
         {
             ComposeSize = 10;
             _items = new List<DiagramItem>();
@@ -84,7 +84,7 @@ namespace CourseWork.Templates
             else
             {
                 Decompose();
-                foreach (var groupDevices in _items.OfType<GroupDevices>())
+                foreach (var groupDevices in _items.OfType<GroupItem>())
                 {
                     groupDevices.UpdateCurrentView(zoom);
                 }
