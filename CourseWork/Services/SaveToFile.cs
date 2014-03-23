@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using CourseWork.Manager;
 using CourseWork.Templates;
+using CourseWork.Templates.Elements;
 
 namespace CourseWork.Services
 {
@@ -27,8 +28,7 @@ namespace CourseWork.Services
             var outLine = new StringBuilder();
 
             var inBuffers =
-                DiagramItemManager.Instance.Items.Where(x => x.DiagramItemType == DiagramItemType.BufferIn).OrderBy(
-                    x => x.Id).ToList();
+                DiagramItemManager.Instance.Items.OfType<InBuffItem>().OrderBy(x => x.Id).ToList();
             foreach (var buffer in inBuffers)
             {
                 foreach (var diagramItemsDevice in DiagramItemManager.Instance.DiagramItemsDevices)
@@ -76,7 +76,7 @@ namespace CourseWork.Services
             var latLngFile = new StreamWriter(Constants.LatLngPath);
             var outLine = new StringBuilder();
 
-            var allItems = DiagramItemManager.Instance.Items.Where(x => x.DiagramItemType != DiagramItemType.Group);
+            var allItems = DiagramItemManager.Instance.Items.Where(x => x.GetType() != typeof (GroupItem));
             foreach (var diagramItem in allItems)
             {
                 outLine.AppendFormat("{0} {1}", diagramItem.PositionLatLng.Lat, diagramItem.PositionLatLng.Lng);

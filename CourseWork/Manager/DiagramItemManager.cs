@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using CourseWork.Templates;
+using CourseWork.Templates.Elements;
 using CourseWork.Utilities.Helpers;
 using GMap.NET;
-using GroupItem = CourseWork.Templates.GroupItem;
+using GroupItem = CourseWork.Templates.Elements.GroupItem;
 
 namespace CourseWork.Manager
 {
@@ -36,8 +37,8 @@ namespace CourseWork.Manager
             get
             {
                 return
-                    _canvas.Children.OfType<DiagramItem>().Where(x => x.DiagramItemType == DiagramItemType.Device).
-                        OrderBy(x => x.Id).ToList();
+                    new List<DiagramItem>(_canvas.Children.OfType<NodeItem>().
+                        OrderBy(x => x.Id).ToList());
             }
         }
 
@@ -99,7 +100,7 @@ namespace CourseWork.Manager
             var inBuffers = new DiagramItem[vector.Rows];
             for (int i = 0; i < vector.Rows; i++)
             {
-                inBuffers[i] = AddNewItem(DiagramItemType.BufferIn, new Point(30, 240 + 100*i));
+                inBuffers[i] = AddNewItemBufferIn(new Point(30, 240 + 100*i));
                 if (fromFileCoords)
                 {
                     inBuffers[i].PositionLatLng = new PointLatLng(positions[i + 1, 1], positions[i + 1, 2]);
@@ -107,7 +108,7 @@ namespace CourseWork.Manager
                 }
             }
 
-            var outBuffer = new DiagramItem("outBuf", DiagramItemType.BufferOut, _canvas.ActualWidth - 60, 200);
+            var outBuffer = new OutBuffItem("outBuf", _canvas.ActualWidth - 60, 200);
 
             if (fromFileCoords)
             {
@@ -120,7 +121,7 @@ namespace CourseWork.Manager
             double curX = 140, curY = 200;
             for (int i = 1; i <= matrix.Rows; i++)
             {
-                var dItem = AddNewItem(DiagramItemType.Device, new Point(curX + 30, curY + 40));
+                var dItem = AddNewItemDevice(new Point(curX + 30, curY + 40));
                 if (fromFileCoords)
                 {
                     dItem.PositionLatLng = new PointLatLng(positions[vector.Rows + 1 + i, 1],
@@ -159,34 +160,32 @@ namespace CourseWork.Manager
             }
         }
 
-        public DiagramItem AddNewItem(DiagramItemType type, Point pos)
+        public NodeItem AddNewItemDevice(Point pos)
         {
-            DiagramItem dItem;
-            switch (type)
-            {
-                case DiagramItemType.Device:
-                    dItem = new DiagramItem((Instance.DiagramItemsDevices.Count + 1).ToString(), type,
-                                                pos.X-30, pos.Y-40);
-                    break;
+            var dItem = new NodeItem((Instance.DiagramItemsDevices.Count + 1).ToString(), pos.X - 30, pos.Y - 40);
+            AddItemToVisual(dItem);
+            return dItem;
+        }
 
-                case DiagramItemType.BufferIn:
-                    dItem = new DiagramItem("inBuf", type, pos.X - 30, pos.Y - 40);
-                    break;
+        public InBuffItem AddNewItemBufferIn(Point pos)
+        {
+            var dItem = new InBuffItem("inBuf", pos.X - 30, pos.Y - 40);
+            AddItemToVisual(dItem);
+            return dItem;
+        }
+        
+        public GroupItem AddNewItemGroupItem(Point pos)
+        {
+            var dItem = new GroupItem("GROUP", pos.X - 30, pos.Y - 40);
+            AddItemToVisual(dItem);
+            return dItem;
+        }
 
-                case DiagramItemType.Group:
-                    dItem = new GroupItem("GROUP", type, pos.X - 30, pos.Y - 40);
-                    break;
-
-                default:
-                    // временно
-                    dItem = null;
-                    break;
-            }
-
+        private void AddItemToVisual(DiagramItem dItem)
+        {
             _canvas.Children.Add(dItem);
             Maps.MapHelper.Instance.UpdateLatLngPoses(dItem);
             dItem.UpdateLayout();
-            return dItem;
         }
 
         /// <summary>
@@ -204,8 +203,8 @@ namespace CourseWork.Manager
                 return;
             }
 
-            if ((to.DiagramItemType == DiagramItemType.BufferIn) ||
-                (from.DiagramItemType == to.DiagramItemType && to.DiagramItemType != DiagramItemType.Device))
+            if ((to.GetType() == typeof(InBuffItem)) ||
+                (from.GetType() == to.GetType() && to.GetType() != typeof(NodeItem)))
             {
                 MessageBox.Show("Невозможно добавить связь", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;

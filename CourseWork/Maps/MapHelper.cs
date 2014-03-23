@@ -6,6 +6,7 @@ using System.Windows.Input;
 using CourseWork.Manager;
 using CourseWork.Properties;
 using CourseWork.Templates;
+using CourseWork.Templates.Elements;
 using CourseWork.Utilities.Helpers;
 using GMap.NET;
 using GMap.NET.WindowsPresentation;
@@ -120,8 +121,8 @@ namespace CourseWork.Maps
             foreach (var diagramItem in DiagramItemManager.Instance.Items)
             {
                 diagramItem.ConnectionArrows.RemoveAll(x =>
-                                                       x.TargetItem.DiagramItemType == DiagramItemType.Group ||
-                                                       x.FromItem.DiagramItemType == DiagramItemType.Group);
+                    x.TargetItem.GetType() == typeof (GroupItem) ||
+                    x.FromItem.GetType() == typeof (GroupItem));
             }
         }
 
@@ -156,8 +157,7 @@ namespace CourseWork.Maps
                 // текущую группу необходимо сгруппировать
                 if (currentGroup.Count > 1)
                 {
-                    var group =
-                        (GroupItem)DiagramItemManager.Instance.AddNewItem(DiagramItemType.Group, new Point());
+                    var group = DiagramItemManager.Instance.AddNewItemGroupItem(new Point());
                     currentGroup.ForEach(group.Add);
                     group.Compose();
                     group.MakeCentered();

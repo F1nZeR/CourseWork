@@ -9,6 +9,7 @@ using CourseWork.Manager;
 using CourseWork.Maps;
 using CourseWork.Maps.ImageProvider;
 using CourseWork.Properties;
+using CourseWork.Templates.Elements;
 using GMap.NET;
 using GMap.NET.MapProviders;
 
@@ -130,8 +131,7 @@ namespace CourseWork.Templates
             var cb = (CheckBox) sender;
             if (cb.IsChecked == false)
             {
-                foreach (var item in DiagramItemManager.Instance.Items.Where(
-                    x => x.DiagramItemType == DiagramItemType.BufferIn))
+                foreach (var item in DiagramItemManager.Instance.Items.OfType<InBuffItem>())
                 {
                     item.Visibility = Visibility.Collapsed;
                     foreach (ConnectionArrow connectionArrow in item.ConnectionArrows)
@@ -142,8 +142,7 @@ namespace CourseWork.Templates
             }
             else
             {
-                foreach (DiagramItem item in DiagramItemManager.Instance.Items.Where(
-                    x => x.DiagramItemType == DiagramItemType.BufferIn))
+                foreach (var item in DiagramItemManager.Instance.Items.OfType<InBuffItem>())
                 {
                     item.Visibility = Visibility.Visible;
                     foreach (ConnectionArrow connectionArrow in item.ConnectionArrows)
@@ -159,8 +158,7 @@ namespace CourseWork.Templates
             var cb = (CheckBox) sender;
             if (cb.IsChecked == false)
             {
-                foreach (DiagramItem item in DiagramItemManager.Instance.Items.Where(
-                    x => x.DiagramItemType == DiagramItemType.BufferOut))
+                foreach (var item in DiagramItemManager.Instance.Items.OfType<OutBuffItem>())
                 {
                     item.Visibility = Visibility.Collapsed;
                     foreach (ConnectionArrow connectionArrow in item.ConnectionArrows)
@@ -171,8 +169,7 @@ namespace CourseWork.Templates
             }
             else
             {
-                foreach (DiagramItem item in DiagramItemManager.Instance.Items.Where(
-                    x => x.DiagramItemType == DiagramItemType.BufferOut))
+                foreach (var item in DiagramItemManager.Instance.Items.OfType<OutBuffItem>())
                 {
                     item.Visibility = Visibility.Visible;
                     foreach (ConnectionArrow connectionArrow in item.ConnectionArrows)
@@ -199,18 +196,18 @@ namespace CourseWork.Templates
                 if (CbShowInBuffer.IsChecked == false)
                 {
                     items.AddRange(DiagramItemManager.Instance.ConnectionArrows.Where(
-                        x => x.FromItem.DiagramItemType != DiagramItemType.BufferIn));
+                        x => x.FromItem.GetType() != typeof (InBuffItem)));
                 }
                 if (CbShowOutBuffer.IsChecked == false)
                 {
                     if (CbShowInBuffer.IsChecked == false)
                     {
-                        items.RemoveAll(x => x.TargetItem.DiagramItemType == DiagramItemType.BufferOut);
+                        items.RemoveAll(x => x.TargetItem.GetType() == typeof (OutBuffItem));
                     }
                     else
                     {
                         items.AddRange(DiagramItemManager.Instance.ConnectionArrows.Where(
-                            x => x.TargetItem.DiagramItemType != DiagramItemType.BufferOut));
+                            x => x.TargetItem.GetType() != typeof (OutBuffItem)));
                     }
                 }
 
@@ -251,8 +248,8 @@ namespace CourseWork.Templates
         {
             Settings.Default.OutArrowType = ((ComboBox) sender).SelectedIndex;
             Settings.Default.Save();
-            foreach (ConnectionArrow item in DiagramItemManager.Instance.ConnectionArrows.Where(
-                x => x.TargetItem.DiagramItemType == DiagramItemType.BufferOut))
+            foreach (var item in DiagramItemManager.Instance.ConnectionArrows.Where(
+                x => x.TargetItem.GetType() == typeof(OutBuffItem)))
             {
                 item.ConnectionArrowType = Settings.Default.OutArrowType == 0
                                                ? ConnectionArrowType.Normal

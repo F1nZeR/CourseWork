@@ -83,10 +83,10 @@
     <Compile Include="Templates\DrawControl.xaml.cs">
       <DependentUpon>DrawControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Templates\Elements\GroupItem.cs" />
     <Compile Include="Templates\Elements\InBuffItem.cs" />
     <Compile Include="Templates\Elements\NodeItem.cs" />
     <Compile Include="Templates\Elements\OutBuffItem.cs" />
-    <Compile Include="Templates\GroupItem.cs" />
     <Compile Include="Templates\InfoPanel\InfoPanel.xaml.cs">
       <DependentUpon>InfoPanel.xaml</DependentUpon>
     </Compile>

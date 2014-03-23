@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media.Imaging;
 using GMap.NET;
 
-namespace CourseWork.Templates
+namespace CourseWork.Templates.Elements
 {
     public class GroupItem : DiagramItem
     {
@@ -18,11 +20,15 @@ namespace CourseWork.Templates
             }
         }
 
-
+        protected override void UpdateImage()
+        {
+            imgNavigate.Source = new BitmapImage(new Uri("../Images/Group.png", UriKind.RelativeOrAbsolute));
+        }
+        
         public double ComposeSize { get; set; }
         private readonly List<DiagramItem> _items;
 
-        public GroupItem(string name, DiagramItemType type, double x, double y) : base(name, type)
+        public GroupItem(string name, double x, double y) : base(name)
         {
             ComposeSize = 10;
             _items = new List<DiagramItem>();

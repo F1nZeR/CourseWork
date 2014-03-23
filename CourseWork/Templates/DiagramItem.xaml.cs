@@ -10,22 +10,14 @@ using System.Windows.Media.Imaging;
 using CourseWork.Manager;
 using CourseWork.Properties;
 using GMap.NET;
+using GroupItem = CourseWork.Templates.Elements.GroupItem;
 
 namespace CourseWork.Templates
 {
-    public enum DiagramItemType
-    {
-        BufferIn,
-        BufferOut,
-        Device,
-        Group
-    }
-
-    public partial class DiagramItem : UserControl
+    public abstract partial class DiagramItem : UserControl
     {
         public virtual PointLatLng PositionLatLng { get; set; }
-
-        public DiagramItemType DiagramItemType { get; private set; }
+        protected abstract void UpdateImage();
 
         public List<ConnectionArrow> ConnectionArrowsOut
         {
@@ -93,30 +85,14 @@ namespace CourseWork.Templates
             set { labelName.Content = value; }
         }
 
-        public DiagramItem(string name, DiagramItemType type)
+        protected DiagramItem(string name)
         {
             InitializeComponent();
             Id = _currentId++;
             DataContext = this;
             ConnectionArrows = new List<ConnectionArrow>();
             LabelName = name;
-
-            DiagramItemType = type;
-            //switch (type)
-            //{
-            //    case DiagramItemType.Device:
-            //        imgNavigate.Source = new BitmapImage(new Uri("../Images/Persist.png", UriKind.RelativeOrAbsolute));
-            //        break;
-            //    case DiagramItemType.BufferIn:
-            //        imgNavigate.Source = new BitmapImage(new Uri("../Images/Setting.png", UriKind.RelativeOrAbsolute));
-            //        break;
-            //    case DiagramItemType.BufferOut:
-            //        imgNavigate.Source = new BitmapImage(new Uri("../Images/Setting.png", UriKind.RelativeOrAbsolute));
-            //        break;
-            //    case DiagramItemType.Group:
-            //        imgNavigate.Source = new BitmapImage(new Uri("../Images/Group.png", UriKind.RelativeOrAbsolute));
-            //        break;
-            //}
+            UpdateImage();
 
             PreviewMouseRightButtonDown += OnPreviewMouseRightButtonDown;
         }
@@ -157,7 +133,7 @@ namespace CourseWork.Templates
             AddSelectedItemsToGroup(group);
         }
 
-        public DiagramItem(string name, DiagramItemType type, double x = 0, double y = 0) : this(name, type)
+        protected DiagramItem(string name, double x = 0, double y = 0) : this(name)
         {
             Move(x, y);
         }
@@ -198,7 +174,7 @@ namespace CourseWork.Templates
         {
             var window = new Windows.NewGroupWindow {Owner = Application.Current.MainWindow};
             window.ShowDialog();
-            var group = (GroupItem) DiagramItemManager.Instance.AddNewItem(DiagramItemType.Group, new Point());
+            var group = DiagramItemManager.Instance.AddNewItemGroupItem(new Point());
             group.LabelName = window.Value;
             group.ComposeSize = Maps.MapHelper.Instance.MapZoom;
             AddSelectedItemsToGroup(group);

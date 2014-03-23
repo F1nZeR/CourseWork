@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using CourseWork.Templates.Elements;
 using CourseWork.Windows;
 
 namespace CourseWork.Templates
@@ -127,7 +128,7 @@ namespace CourseWork.Templates
                            ? Properties.Settings.Default.NormalArrowType
                            : Properties.Settings.Default.OutArrowType;
 
-            if (toItem.DiagramItemType == DiagramItemType.BufferOut)
+            if (toItem.GetType() == typeof(OutBuffItem))
             {
                 ConnectionArrowType = Properties.Settings.Default.OutArrowType == 0
                                           ? ConnectionArrowType.Normal

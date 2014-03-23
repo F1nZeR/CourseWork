@@ -208,12 +208,12 @@ namespace CourseWork.Templates
                 switch (_idOfNewElement)
                 {
                     case 0:
-                        DiagramItemManager.Instance.AddNewItem(DiagramItemType.Device, e.GetPosition(this));
+                        DiagramItemManager.Instance.AddNewItemDevice(e.GetPosition(this));
                         ResetAddNew();
                         return;
 
                     case 1:
-                        DiagramItemManager.Instance.AddNewItem(DiagramItemType.BufferIn, e.GetPosition(this));
+                        DiagramItemManager.Instance.AddNewItemBufferIn(e.GetPosition(this));
                         ResetAddNew();
                         return;
                 }
@@ -299,7 +299,7 @@ namespace CourseWork.Templates
                 result.IsHitTestVisible = true;
             }
             _addNewElement = false;
-            this.Children.Remove(_line);
+            Children.Remove(_line);
             Mouse.SetCursor(Cursors.Arrow);
         }
     }
