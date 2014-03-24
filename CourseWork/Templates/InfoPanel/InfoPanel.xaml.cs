@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CourseWork.Manager;
 using DataGrid2DLibrary;
 
 namespace CourseWork.Templates.InfoPanel
@@ -24,14 +25,18 @@ namespace CourseWork.Templates.InfoPanel
         public InfoPanel()
         {
             InitializeComponent();
-            Float2DArray = new float[5, 10];
             Dg2D.DataContext = this;
+            Float2DArray = new double[1, 1];
         }
 
-        public float[,] Float2DArray { get; set; }
+        public double[,] Float2DArray { get; set; }
 
         public void SyncTable()
         {
+            Dg2D.ItemsSource2D = null;
+            var chanceArray = DiagramItemManager.Instance.GetDeviceChanceMatrix();
+            Float2DArray = chanceArray.ConvertToDoubleArray();
+            Dg2D.ItemsSource2D = Float2DArray;
         }
     }
 }

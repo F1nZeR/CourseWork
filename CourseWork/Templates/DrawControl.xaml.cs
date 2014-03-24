@@ -27,7 +27,7 @@ namespace CourseWork.Templates
             InitializeComponent();
             
             PreviewKeyDown += OnPreviewKeyDown;
-            Loaded += OnLoaded;
+            MainInit();
 
             PreviewMouseRightButtonDown += OnPreviewMouseRightButtonDown;
             PreviewMouseRightButtonUp += OnPreviewMouseRightButtonUp;
@@ -43,7 +43,7 @@ namespace CourseWork.Templates
             MapHelper.Instance.GroupElements();
         }
 
-        private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
+        private void MainInit()
         {
             MainMap.MapProvider = GMapProviders.EmptyProvider;
             MainMap.Zoom = 0;

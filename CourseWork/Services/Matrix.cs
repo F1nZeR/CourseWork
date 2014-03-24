@@ -299,5 +299,18 @@ namespace CourseWork.Utilities
                 result += this[rowNumber, j];
             return result;
         }
+
+        public double[,] ConvertToDoubleArray()
+        {
+            var resArray = new double[Rows, Cols];
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Cols; j++)
+                {
+                    resArray[i, j] = this[i + 1, j + 1];
+                }
+            }
+            return resArray;
+        }
     }
 }

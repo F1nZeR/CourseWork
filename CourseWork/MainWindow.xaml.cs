@@ -6,7 +6,6 @@ using System.Windows.Input;
 using CourseWork.Manager;
 using CourseWork.Maps.ImageProvider;
 using CourseWork.Properties;
-using CourseWork.Templates;
 using GMap.NET.MapProviders;
 
 namespace CourseWork
@@ -74,6 +73,11 @@ namespace CourseWork
                 if (TabTable.IsSelected)
                 {
                     InfoPanelBlock.SyncTable();
+                }
+                else if (IsLoaded)
+                {
+                    var matrix = InfoPanelBlock.Float2DArray;
+                    DiagramItemManager.Instance.SyncVisualState(matrix);
                 }
             }
         }

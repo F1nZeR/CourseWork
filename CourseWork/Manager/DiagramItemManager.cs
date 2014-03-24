@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using CourseWork.Templates;
 using CourseWork.Templates.Elements;
+using CourseWork.Utilities;
 using CourseWork.Utilities.Helpers;
 using GMap.NET;
 using GroupItem = CourseWork.Templates.Elements.GroupItem;
@@ -73,7 +74,7 @@ namespace CourseWork.Manager
         {
             for (int i = 0; i < _canvas.Children.Count; i++)
             {
-                var curItem = _canvas.Children[0];
+                var curItem = _canvas.Children[i];
                 var isDiagramItem = curItem is DiagramItem;
                 if (isDiagramItem)
                 {
@@ -231,10 +232,101 @@ namespace CourseWork.Manager
             Items.Remove(item);
             _canvas.Children.Remove(item);
         }
+
         public void Remove(ConnectionArrow arrow)
         {
+            arrow.FromItem.ConnectionArrows.Remove(arrow);
+            arrow.TargetItem.ConnectionArrows.Remove(arrow);
             ConnectionArrows.Remove(arrow);
             _canvas.Children.Remove(arrow);
+        }
+
+        /// <summary>
+        /// Получить матрицу переходов между устройствами
+        /// </summary>
+        /// <returns></returns>
+        public Matrix GetDeviceChanceMatrix()
+        {
+            var itemsCount = DiagramItemsDevices.Count;
+            if (itemsCount == 0) return new Matrix(1, 1);
+
+            var resMatrix = new Matrix(itemsCount, itemsCount);
+            var i = 0;
+            foreach (var diagramItemsDevice in DiagramItemsDevices)
+            {
+                i++;
+                var j = 0;
+                foreach (var secondItemDevice in DiagramItemsDevices)
+                {
+                    j++;
+                    var link =
+                        diagramItemsDevice.ConnectionArrowsOut.FirstOrDefault(
+                            x => x.TargetItem.Id == secondItemDevice.Id);
+                    var chance = link == null ? 0 : link.Chance;
+                    resMatrix[i, j] = chance;
+                }
+            }
+
+            return resMatrix;
+        }
+
+        /// <summary>
+        /// Привести визуальную часть в соответствии с матрицей переходов
+        /// </summary>
+        /// <param name="matrix"></param>
+        public void SyncVisualState(double[,] matrix)
+        {
+            // хватает ли элементов
+            var matrixLength = matrix.GetLength(0);
+            if (matrixLength > DiagramItemsDevices.Count)
+            {
+                for (int k = 0; k < matrixLength - DiagramItemsDevices.Count; k++)
+                {
+                    AddNewItemDevice(new Point());
+                }
+            }
+            else if (matrixLength < DiagramItemsDevices.Count)
+            {
+                for (int k = 0; k < DiagramItemsDevices.Count - matrixLength; k++)
+                {
+                    // убираем последние в порядке добавления
+                    Remove(DiagramItemsDevices.Last());
+                }
+            }
+
+            // синхроним связи
+            var i = 0;
+            foreach (var fromDevice in DiagramItemsDevices)
+            {
+                var j = 0;
+                foreach (var toDevice in DiagramItemsDevices)
+                {
+                    var link =
+                        fromDevice.ConnectionArrowsOut.FirstOrDefault(
+                            x => x.TargetItem.Id == toDevice.Id);
+                    var chance = matrix[i, j];
+                    if (chance > 0)
+                    {
+                        if (link == null)
+                        {
+                            // связь добавили, но не нарисовали пока что
+                            AddNewLink(fromDevice, toDevice, chance);
+                        }
+                        else if (!link.Chance.Equals(chance))
+                        {
+                            // связь есть и там, и там, но с разными значениями
+                            link.Chance = chance;
+                        }
+                    }
+                    else if (link != null)
+                    {
+                        // связи быть не должно уже, но она ещё отрисована
+                        Remove(link);
+                    }
+                    j++;
+                }
+                i++;
+            }
         }
     }
 }

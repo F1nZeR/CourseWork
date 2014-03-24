@@ -1,8 +1,9 @@
 ﻿<Window x:Class="CourseWork.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-        xmlns:Templates="clr-namespace:CourseWork.Templates"
+        xmlns:templates="clr-namespace:CourseWork.Templates"
         xmlns:infoPanel="clr-namespace:CourseWork.Templates.InfoPanel"
+        xmlns:utilities="clr-namespace:CourseWork.Utilities"
         Title="Конструктор СеМО" Height="650" Width="825">
     <Grid>
         <Grid.RowDefinitions>
@@ -24,7 +25,7 @@
         <TabControl Grid.Row="1" SelectionChanged="TabControlSelectionChanged">
             <TabItem Header="Визуальное прдеставление" x:Name="TabVisual">
                 <Grid Background="#FFE5E5E5">
-                    <Templates:DrawControl x:Name="DrawControl" />
+                    <templates:DrawControl x:Name="DrawControl" />
                     <Canvas x:Name="DragSelectionCanvas" Visibility="Collapsed">
                         <Border 
                             x:Name="DragSelectionBorder"
@@ -38,7 +39,7 @@
             </TabItem>
             <TabItem Header="Табличное представление" x:Name="TabTable">
                 <Grid Background="#FFE5E5E5">
-                    <infoPanel:InfoPanel x:Name="InfoPanelBlock" />
+                    <infoPanel:InfoPanel x:Name="InfoPanelBlock" Margin="10" />
                 </Grid>
             </TabItem>
         </TabControl>

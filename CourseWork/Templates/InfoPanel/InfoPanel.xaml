@@ -4,10 +4,22 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:dg2d="clr-namespace:DataGrid2DLibrary;assembly=DataGrid2DLibrary"
-             mc:Ignorable="d" Height="418" Width="574">
+             mc:Ignorable="d" d:DesignHeight="418" d:DesignWidth="574">
     <Grid>
-        <GroupBox Header="Матрица маршрутизации">
+        <GroupBox Header="Матрица маршрутизации" Margin="0,147,146,0">
             <dg2d:DataGrid2D Name="Dg2D"
+                             Margin="5,0,5,5"
+                             AlternationCount="2"
+                             RowBackground="White"
+                             UseModifiedDataGridStyle="False"
+                             ItemsSource2D="{Binding Float2DArray}"
+                             AlternatingRowBackground="#ebebeb"                       
+                             Background="Transparent">
+            </dg2d:DataGrid2D>
+        </GroupBox>
+
+        <GroupBox Header="Выходная матрица" Margin="0,147,0,0" HorizontalAlignment="Right" Width="141">
+            <dg2d:DataGrid2D Name="DgOutChances"
                              Margin="5,0,5,5"
                              AlternationCount="2"
                              RowBackground="White"
