@@ -1,10 +1,8 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace CourseWork.Windows
+namespace SeMOEditor.Windows
 {
     /// <summary>
     /// Логика взаимодействия для ChangeLinkWindow.xaml

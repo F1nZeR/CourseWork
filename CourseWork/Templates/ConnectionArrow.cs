@@ -1,15 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using CourseWork.Templates.Elements;
-using CourseWork.Windows;
+using SeMOEditor.Templates.Elements;
+using SeMOEditor.Windows;
 
-namespace CourseWork.Templates
+namespace SeMOEditor.Templates
 {
     public enum ConnectionArrowType
     {

@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using CourseWork.Templates;
-using CourseWork.Templates.Elements;
-using CourseWork.Utilities;
-using CourseWork.Utilities.Helpers;
 using GMap.NET;
-using GroupItem = CourseWork.Templates.Elements.GroupItem;
+using SeMOEditor.Maps;
+using SeMOEditor.Services;
+using SeMOEditor.Templates;
+using SeMOEditor.Templates.Elements;
+using SeMOEditor.Utilities.Helpers;
+using GroupItem = SeMOEditor.Templates.Elements.GroupItem;
 
-namespace CourseWork.Manager
+namespace SeMOEditor.Manager
 {
     public class DiagramItemManager
     {
@@ -92,9 +89,9 @@ namespace CourseWork.Manager
         /// </summary>
         public void LoadDefaultElements()
         {
-            var matrix = Services.ReadFromFile.ReadMatrix();
-            var vector = Services.ReadFromFile.ReadMatrixRow();
-            var positions = Services.ReadFromFile.ReadLatLngPositions();
+            var matrix = ReadFromFile.ReadMatrix();
+            var vector = ReadFromFile.ReadMatrixRow();
+            var positions = ReadFromFile.ReadLatLngPositions();
 
             var fromFileCoords = vector.Rows + vector.Cols + 1 == positions.Rows;
 
@@ -105,7 +102,7 @@ namespace CourseWork.Manager
                 if (fromFileCoords)
                 {
                     inBuffers[i].PositionLatLng = new PointLatLng(positions[i + 1, 1], positions[i + 1, 2]);
-                    Maps.MapHelper.Instance.UpdateScreenCoords(inBuffers[i]);
+                    MapHelper.Instance.UpdateScreenCoords(inBuffers[i]);
                 }
             }
 
@@ -114,7 +111,7 @@ namespace CourseWork.Manager
             if (fromFileCoords)
             {
                 outBuffer.PositionLatLng = new PointLatLng(positions[vector.Rows + 1, 1], positions[vector.Rows + 1, 2]);
-                Maps.MapHelper.Instance.UpdateScreenCoords(outBuffer);
+                MapHelper.Instance.UpdateScreenCoords(outBuffer);
             }
             _canvas.Children.Add(outBuffer);
 
@@ -127,7 +124,7 @@ namespace CourseWork.Manager
                 {
                     dItem.PositionLatLng = new PointLatLng(positions[vector.Rows + 1 + i, 1],
                                                            positions[vector.Rows + 1 + i, 2]);
-                    Maps.MapHelper.Instance.UpdateScreenCoords(dItem);
+                    MapHelper.Instance.UpdateScreenCoords(dItem);
                 }
 
                 for (int vectIndex = 1; vectIndex <= vector.Rows; vectIndex++)
@@ -185,7 +182,7 @@ namespace CourseWork.Manager
         private void AddItemToVisual(DiagramItem dItem)
         {
             _canvas.Children.Add(dItem);
-            Maps.MapHelper.Instance.UpdateLatLngPoses(dItem);
+            MapHelper.Instance.UpdateLatLngPoses(dItem);
             dItem.UpdateLayout();
         }
 
@@ -224,7 +221,7 @@ namespace CourseWork.Manager
         /// </summary>
         public void SaveAll()
         {
-            Services.SaveToFile.Save();
+            SaveToFile.Save();
         }
 
         public void Remove(DiagramItem item)

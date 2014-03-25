@@ -4,8 +4,9 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using GMap.NET;
+using SeMOEditor.Maps;
 
-namespace CourseWork.Templates.Elements
+namespace SeMOEditor.Templates.Elements
 {
     public class GroupItem : DiagramItem
     {
@@ -16,7 +17,7 @@ namespace CourseWork.Templates.Elements
             set
             {
                 _pointLatLng = value;
-                _items.ForEach(x => Maps.MapHelper.Instance.UpdateLatLngPoses(x));
+                _items.ForEach(x => MapHelper.Instance.UpdateLatLngPoses(x));
             }
         }
 
@@ -141,7 +142,7 @@ namespace CourseWork.Templates.Elements
             var items = _items.ToList();
             _items.Clear();
             PositionLatLng = new PointLatLng(centerPoint.X, centerPoint.Y);
-            Maps.MapHelper.Instance.UpdateScreenCoords(this);
+            MapHelper.Instance.UpdateScreenCoords(this);
             _items.AddRange(items);
         }
     }

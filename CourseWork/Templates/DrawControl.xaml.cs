@@ -5,15 +5,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using CourseWork.Manager;
-using CourseWork.Maps;
-using CourseWork.Maps.ImageProvider;
-using CourseWork.Properties;
-using CourseWork.Templates.Elements;
 using GMap.NET;
 using GMap.NET.MapProviders;
+using SeMOEditor.Manager;
+using SeMOEditor.Maps;
+using SeMOEditor.Properties;
+using SeMOEditor.Templates.Elements;
 
-namespace CourseWork.Templates
+namespace SeMOEditor.Templates
 {
     /// <summary>
     /// Логика взаимодействия для DrawControl.xaml

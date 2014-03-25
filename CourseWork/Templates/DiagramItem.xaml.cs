@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Effects;
-using System.Windows.Media.Imaging;
-using CourseWork.Manager;
-using CourseWork.Properties;
 using GMap.NET;
-using GroupItem = CourseWork.Templates.Elements.GroupItem;
+using SeMOEditor.Manager;
+using SeMOEditor.Maps;
+using SeMOEditor.Properties;
+using SeMOEditor.Windows;
+using GroupItem = SeMOEditor.Templates.Elements.GroupItem;
 
-namespace CourseWork.Templates
+namespace SeMOEditor.Templates
 {
     public abstract partial class DiagramItem : UserControl
     {
@@ -79,7 +79,7 @@ namespace CourseWork.Templates
 
         private static int _currentId;
         public int Id { get; private set; }
-        public String LabelName
+        public string LabelName
         {
             get { return labelName.Content.ToString(); }
             set { labelName.Content = value; }
@@ -100,15 +100,22 @@ namespace CourseWork.Templates
         private void OnPreviewMouseRightButtonDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
             IsSelected = true;
-            miAddToNewGroup.IsEnabled = miAddToExistingGroup.IsEnabled = !Settings.Default.AutoGrouping;
+            MiAddToNewGroup.IsEnabled = MiAddToExistingGroup.IsEnabled = !Settings.Default.AutoGrouping;
+
+            var curGroups = DiagramItemManager.Instance.GroupDeviceses;
+            if (GetType() == typeof (GroupItem))
+            {
+                // убираем эту группу
+                curGroups = curGroups.Where(x => !x.Equals(this)).ToList();
+            }
 
             // есть, в какую группу добавить элемент
-            if (DiagramItemManager.Instance.GroupDeviceses.Count > 0)
+            if (curGroups.Count > 0)
             {
-                miAddToExistingGroup.IsEnabled = true;
-                miAddToExistingGroup.Items.Clear();
+                MiAddToExistingGroup.IsEnabled = true;
+                MiAddToExistingGroup.Items.Clear();
 
-                foreach (var groupDevicese in DiagramItemManager.Instance.GroupDeviceses)
+                foreach (var groupDevicese in curGroups)
                 {
                     var menuItem = new MenuItem
                     {
@@ -116,19 +123,19 @@ namespace CourseWork.Templates
                     };
                     menuItem.Click += MenuItemAddToGroupOnClick;
 
-                    miAddToExistingGroup.Items.Add(menuItem);
+                    MiAddToExistingGroup.Items.Add(menuItem);
                 }
             }
             else
             {
-                miAddToExistingGroup.IsEnabled = false;
-                miAddToExistingGroup.Items.Clear();
+                MiAddToExistingGroup.IsEnabled = false;
+                MiAddToExistingGroup.Items.Clear();
             }
         }
 
         private void MenuItemAddToGroupOnClick(object sender, RoutedEventArgs routedEventArgs)
         {
-            var index = miAddToExistingGroup.Items.IndexOf(sender);
+            var index = MiAddToExistingGroup.Items.IndexOf(sender);
             var group = DiagramItemManager.Instance.GroupDeviceses[index];
             AddSelectedItemsToGroup(group);
         }
@@ -172,11 +179,11 @@ namespace CourseWork.Templates
 
         private void MiAddToNewGroupClick(object sender, RoutedEventArgs e)
         {
-            var window = new Windows.NewGroupWindow {Owner = Application.Current.MainWindow};
+            var window = new NewGroupWindow {Owner = Application.Current.MainWindow};
             window.ShowDialog();
             var group = DiagramItemManager.Instance.AddNewItemGroupItem(new Point());
             group.LabelName = window.Value;
-            group.ComposeSize = Maps.MapHelper.Instance.MapZoom;
+            group.ComposeSize = MapHelper.Instance.MapZoom;
             AddSelectedItemsToGroup(group);
         }
 
@@ -191,7 +198,18 @@ namespace CourseWork.Templates
             }
 
             DiagramItemManager.Instance.SelectedItems.ForEach(x => x.IsSelected = false);
-            Maps.MapHelper.Instance.GroupElements();
+            MapHelper.Instance.GroupElements();
+        }
+
+        private void MiRenameOnClick(object sender, RoutedEventArgs e)
+        {
+            var rnmWindow = new RenameItemWindow(LabelName);
+            rnmWindow.Owner = Application.Current.MainWindow;
+            rnmWindow.ShowDialog();
+            if (!string.IsNullOrEmpty(rnmWindow.Result))
+            {
+                LabelName = rnmWindow.Result;
+            }
         }
     }
 }

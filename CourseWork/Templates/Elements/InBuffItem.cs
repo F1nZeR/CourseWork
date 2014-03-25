@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Media.Imaging;
 
-namespace CourseWork.Templates.Elements
+namespace SeMOEditor.Templates.Elements
 {
     public class InBuffItem : DiagramItem
     {

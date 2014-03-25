@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="CourseWork.Templates.DiagramItem"
+﻿<UserControl x:Class="SeMOEditor.Templates.DiagramItem"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -23,9 +23,10 @@
     </UserControl.Resources>
     
     <UserControl.ContextMenu>
-        <ContextMenu x:Name="cMenu">
-            <MenuItem x:Name="miAddToNewGroup" Header="Добавить в новую группу" Click="MiAddToNewGroupClick" />
-            <MenuItem x:Name="miAddToExistingGroup" Header="Добавить в существующую группу" />
+        <ContextMenu x:Name="CMenu">
+            <MenuItem x:Name="MiRename" Header="Переименовать" Click="MiRenameOnClick" />
+            <MenuItem x:Name="MiAddToNewGroup" Header="Добавить в новую группу" Click="MiAddToNewGroupClick" />
+            <MenuItem x:Name="MiAddToExistingGroup" Header="Добавить в существующую группу" />
         </ContextMenu>
     </UserControl.ContextMenu>
     

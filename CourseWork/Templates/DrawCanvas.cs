@@ -6,10 +6,10 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using CourseWork.Manager;
-using CourseWork.Maps;
+using SeMOEditor.Manager;
+using SeMOEditor.Maps;
 
-namespace CourseWork.Templates
+namespace SeMOEditor.Templates
 {
     public class DrawCanvas : Canvas
     {

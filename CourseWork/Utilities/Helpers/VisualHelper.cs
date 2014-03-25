@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace CourseWork.Utilities.Helpers
+namespace SeMOEditor.Utilities.Helpers
 {
     public static class VisualHelper
     {

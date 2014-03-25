@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
-using CourseWork.Manager;
 using CourseWork.Maps.ImageProvider;
-using CourseWork.Properties;
 using GMap.NET.MapProviders;
+using SeMOEditor.Manager;
+using SeMOEditor.Properties;
 
-namespace CourseWork
+namespace SeMOEditor
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml

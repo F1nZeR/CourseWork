@@ -1,11 +1,11 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Text;
-using CourseWork.Manager;
-using CourseWork.Templates;
-using CourseWork.Templates.Elements;
+using CourseWork;
+using SeMOEditor.Manager;
+using SeMOEditor.Templates.Elements;
 
-namespace CourseWork.Services
+namespace SeMOEditor.Services
 {
     public static class SaveToFile
     {

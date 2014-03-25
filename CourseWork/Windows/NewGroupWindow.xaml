@@ -1,4 +1,4 @@
-﻿<Window x:Class="CourseWork.Windows.NewGroupWindow"
+﻿<Window x:Class="SeMOEditor.Windows.NewGroupWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Добавление новой группы" Height="77" Width="322" WindowStartupLocation="CenterOwner">

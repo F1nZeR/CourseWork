@@ -3,9 +3,8 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using GMap.NET;
-using Color = System.Drawing.Color;
 
-namespace CourseWork.Utilities.Helpers
+namespace SeMOEditor.Utilities.Helpers
 {
     public class ImageHelper
     {

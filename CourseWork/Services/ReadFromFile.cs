@@ -1,10 +1,10 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Windows;
-using CourseWork.Utilities;
-using CourseWork.Utilities.Helpers;
+using CourseWork;
+using SeMOEditor.Utilities.Helpers;
 
-namespace CourseWork.Services
+namespace SeMOEditor.Services
 {
     public static class ReadFromFile
     {

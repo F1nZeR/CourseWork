@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace CourseWork.Utilities
+namespace SeMOEditor.Services
 {
     public class MatrixRow 
     {

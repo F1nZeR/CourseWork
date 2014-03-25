@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using CourseWork.Manager;
-using CourseWork.Properties;
-using CourseWork.Templates;
-using CourseWork.Templates.Elements;
-using CourseWork.Utilities.Helpers;
 using GMap.NET;
 using GMap.NET.WindowsPresentation;
+using SeMOEditor.Manager;
+using SeMOEditor.Properties;
+using SeMOEditor.Templates;
+using SeMOEditor.Templates.Elements;
+using SeMOEditor.Utilities.Helpers;
 
-namespace CourseWork.Maps
+namespace SeMOEditor.Maps
 {
     public class MapHelper
     {

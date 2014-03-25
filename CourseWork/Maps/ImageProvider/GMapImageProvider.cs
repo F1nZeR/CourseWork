@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
-using CourseWork.Utilities.Helpers;
 using GMap.NET;
 using GMap.NET.MapProviders;
+using SeMOEditor.Utilities.Helpers;
 
 namespace CourseWork.Maps.ImageProvider
 {

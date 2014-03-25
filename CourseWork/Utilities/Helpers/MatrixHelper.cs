@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SeMOEditor.Services;
 
-namespace CourseWork.Utilities.Helpers
+namespace SeMOEditor.Utilities.Helpers
 {
     public class MatrixHelper
     {

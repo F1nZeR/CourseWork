@@ -1,20 +1,21 @@
-﻿<UserControl x:Class="CourseWork.Templates.DrawControl"
+﻿<UserControl x:Class="SeMOEditor.Templates.DrawControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:Templates="clr-namespace:CourseWork.Templates" mc:Ignorable="d" 
-             xmlns:Properties="clr-namespace:CourseWork.Properties"
-             xmlns:WindowsPresentation="clr-namespace:GMap.NET.WindowsPresentation;assembly=GMap.NET.WindowsPresentation"
+             mc:Ignorable="d" 
+             xmlns:windowsPresentation="clr-namespace:GMap.NET.WindowsPresentation;assembly=GMap.NET.WindowsPresentation"
+             xmlns:templates="clr-namespace:SeMOEditor.Templates"
+             xmlns:properties="clr-namespace:SeMOEditor.Properties"
              d:DesignHeight="362" d:DesignWidth="557">
     <UserControl.Resources>
-        <ObjectDataProvider x:Key="odpSettings" ObjectType="{x:Type Properties:Settings}" />
+        <ObjectDataProvider x:Key="odpSettings" ObjectType="{x:Type properties:Settings}" />
     </UserControl.Resources>
 
     <Grid>
         <Grid Margin="149,0,0,0">
-            <WindowsPresentation:GMapControl x:Name="MainMap" MaxZoom="24" MinZoom="0" />
-            <Templates:DrawCanvas x:Name="DrawCanvas" Background="Transparent"/>
+            <windowsPresentation:GMapControl x:Name="MainMap" MaxZoom="24" MinZoom="0" />
+            <templates:DrawCanvas x:Name="DrawCanvas" Background="Transparent" />
 
             <Canvas x:Name="DragSelectionCanvas" Visibility="Collapsed">
                 <Border 
