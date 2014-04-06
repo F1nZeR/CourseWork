@@ -167,7 +167,6 @@ namespace SeMOEditor.Templates
         public void AddDragEffect()
         {
             Effect = new DropShadowEffect();
-            Panel.GetZIndex(this);
             Panel.SetZIndex(this, 100);
         }
 
@@ -203,8 +202,7 @@ namespace SeMOEditor.Templates
 
         private void MiRenameOnClick(object sender, RoutedEventArgs e)
         {
-            var rnmWindow = new RenameItemWindow(LabelName);
-            rnmWindow.Owner = Application.Current.MainWindow;
+            var rnmWindow = new RenameItemWindow(LabelName) {Owner = Application.Current.MainWindow};
             rnmWindow.ShowDialog();
             if (!string.IsNullOrEmpty(rnmWindow.Result))
             {

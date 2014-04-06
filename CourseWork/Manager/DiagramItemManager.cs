@@ -8,6 +8,7 @@ using SeMOEditor.Services;
 using SeMOEditor.Templates;
 using SeMOEditor.Templates.Elements;
 using SeMOEditor.Utilities.Helpers;
+using SeMOEditor.Windows;
 using GroupItem = SeMOEditor.Templates.Elements.GroupItem;
 
 namespace SeMOEditor.Manager
@@ -211,7 +212,13 @@ namespace SeMOEditor.Manager
             if (_canvas.Children.OfType<ConnectionArrow>().Count(
                 x => Equals(x.FromItem, from) && Equals(x.TargetItem, to)) == 0)
             {
-                _canvas.Children.Add(new ConnectionArrow(from, to, chance));
+                var createWindow = new ChangeLinkWindow(from, to) {Owner = Application.Current.MainWindow};
+                createWindow.ShowDialog();
+                if (createWindow.Chance > 0)
+                {
+                    var connection = new ConnectionArrow(from, to, createWindow.Chance);
+                    _canvas.Children.Add(connection);
+                }
             }
             else MessageBox.Show("Такая связь уже имеется", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
         }

@@ -73,6 +73,7 @@ namespace SeMOEditor.Maps
             var heightLat = lat - DiagramItemManager.Instance.Items.Min((x => x.PositionLatLng.Lat));
             var widthLng = DiagramItemManager.Instance.Items.Max(x => x.PositionLatLng.Lng) - lng;
             _map.SetZoomToFitRect(new RectLatLng(lat, lng, widthLng, heightLat));
+            ReDrawElements();
         }
 
         /// <summary>

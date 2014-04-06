@@ -136,8 +136,8 @@ namespace SeMOEditor.Templates
 
             Chance = chance;
 
-            this.UpdateLink();
-            this.SetDeafultStyle();
+            UpdateLink();
+            SetDeafultStyle();
 
             fromItem.ConnectionArrows.Add(this);
             toItem.ConnectionArrows.Add(this);
@@ -184,13 +184,9 @@ namespace SeMOEditor.Templates
         {
             if (e.ClickCount == 2)
             {
-                var wndChange = new ChangeLinkWindow
+                var wndChange = new ChangeLinkWindow(FromItem, TargetItem, Chance)
                                     {
-                                        Top = e.GetPosition(this).Y,
-                                        Left = e.GetPosition(this).X,
-                                        Title =
-                                            string.Format("{0} -> {1} ({2}%)", FromItem.LabelName, TargetItem.LabelName,
-                                                          Chance*100)
+                                        Owner = Application.Current.MainWindow,
                                     };
 
                 MouseLeave -= OnMouseLeave;

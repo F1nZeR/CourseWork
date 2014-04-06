@@ -28,9 +28,8 @@
                 />
             </Canvas>
         </Grid>
-
-
-        <StackPanel Background="WhiteSmoke" HorizontalAlignment="Left" Width="144">
+        
+        <StackPanel Background="WhiteSmoke" HorizontalAlignment="Left" Width="145">
             <Expander Header="Добавить элемент" >
                 <StackPanel>
                     <Button Content="Устройство" Margin="2" Click="ButtonClickAddDevice" />

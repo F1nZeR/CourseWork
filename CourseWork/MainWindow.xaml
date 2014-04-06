@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:infoPanel="clr-namespace:SeMOEditor.Templates.InfoPanel"
         xmlns:templates="clr-namespace:SeMOEditor.Templates"
-        Title="Конструктор СеМО" Height="650" Width="825">
+        Title="Конструктор СеМО" Height="565.385" Width="921.154">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -25,7 +25,7 @@
             <TabItem Header="Визуальное прдеставление" x:Name="TabVisual">
                 <Grid Background="#FFE5E5E5">
                     <templates:DrawControl x:Name="DrawControl" />
-                    <Canvas x:Name="DragSelectionCanvas" Visibility="Collapsed">
+                    <Canvas x:Name="DragSelectionCanvas" Margin="145,0,0,0" >
                         <Border 
                             x:Name="DragSelectionBorder"
                             BorderBrush="Blue"
